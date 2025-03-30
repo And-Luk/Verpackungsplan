@@ -53,7 +53,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = " /Users/and/workspace/Verpackungsplan/Verpackungsplan/main.cpp"
+            argument = "&quot;/Users/and/Downloads/Makefile.txt&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "&quot;DEBUG&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
