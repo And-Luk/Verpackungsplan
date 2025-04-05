@@ -53,11 +53,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "&quot;/Users/and/Downloads/Makefile.txt&quot;"
+            argument = "&quot;/Users/and/Downloads/return/test.txt&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "&quot;DEBUG&quot;"
+            argument = "&quot;\\d{6}[^(\\d|:alpha:)]&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
