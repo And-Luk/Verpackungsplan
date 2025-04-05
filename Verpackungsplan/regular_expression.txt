@@ -219,6 +219,25 @@ ________________________________________________________________________________
 "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\"|[[:space:]])*"
 
 
+clear
+___________________________________________________________________________
+ [955345]  [535722] -->  ETI Bio Hähnchen-Bratwurst 220g Edeka
+ [955345]  [535721] -->  ETR Bio Hähnchen-Bratwurst 220g Edeka"
+ [955700]  [524978] -->  FOL 675 Beutel 2kg neutral
+ [955800]  [524978] -->  FOL 675 Beutel 2kg neutral
+ [956020]  [524978] -->  FOL 675 Beutel 2kg neutral
+ [956117]  [524993] -->  UFO 493 neutral GA 100
+ [956117]  [524989] -->  OFO 467 neutral"
+ [956118]  [524944] -->  FOL 470 Beutel 1000 g TK
+ [956130]  [524976] -->  OFO 342 neutral
+ [956130]  [524963] -->  UFO 359 Multifol GA 100"
+ [956212]  [524976] -->  OFO 342 neutral
+ [956212]  [524998] -->  UFO 358 neutral, Schnecken 1kg"
+ [956255]  [524993] -->  UFO 493 neutral GA 100
+ [956255]  [524891] -->  OFO 467 weiß-blaue Raute Essanleitung
+ [956255]  [535803] -->  ETI MÜNCHNER WW 300g
+"(5|9)\\d{5}[^(\\d|[:alpha:]|)](\"|[[:space:]])*(\:)*"
+
 
 
 
