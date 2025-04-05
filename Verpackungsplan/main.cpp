@@ -75,7 +75,7 @@ static vector<tuple<string,string,string>> matches (const path & path_to, const 
             
             if (str_temp[0]=='9' ) { //&& ident ==0
                 ident = 1;
-                pair_temp = substring(result.suffix(), string{"(9|5)\\d{5}[^(\\d|[:alpha:]\\|)](\"\\|\\\\:|[[:space:]])*"});
+                pair_temp = substring(result.suffix(), string{"(9|5)\\d{5}[^(\\d|[:alpha:]\\|)](\"\\|\\\\:|[[:space:]])*(\\:)*([[:space:]])*"});
                 data_vec.emplace_back(str_temp,pair_temp.first, pair_temp.second);
                 str_old=str_temp;
                 continue;
