@@ -241,3 +241,28 @@ ___________________________________________________________________________
 
 
 
+\fs32 \cf2 \up0 \nosupersub \ulnone #N/A33
+\fs24 \cf0 \up0 \nosupersub \ulnone \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\fs32 \cf2 \up0 \nosupersub \ulnone #N/U33
+\fs24 \cf0 \up0 \nosupersub \ulnone \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \cell \row
+
+
+\fs32 \cf2 \up0 \nosupersub \ulnone #N/A33
+\fs24 \cf0 \up0 \nosupersub \ulnone \cell
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\fs24 \cf0 \up0 \nosupersub \ulnone \cell
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \cell
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \cell \row
+
+
+
+

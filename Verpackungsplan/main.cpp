@@ -22,6 +22,7 @@
 #include <filesystem>
 #include <cstring>
 //#include <algorithm>
+#include <sstream>
 
 
 
@@ -30,6 +31,7 @@ using namespace filesystem;
 
 static vector<tuple<string, string, string>> matches (const path &, const char*);
 pair<string, string> substring (const string & source, const string & pattern);
+bool read_write_RTF (const path &, const path &);
 
 int main(int argc, const char * argv[]) {
     if (argc<=2) {
@@ -47,21 +49,32 @@ int main(int argc, const char * argv[]) {
 
     try {
         auto data (matches(argv[1], argv[2]));
-        for (const auto &[ID,result,content]: data) {
-            printf(" [%s]  [%s] -->  %s\n",ID.c_str(), result.c_str(), content.c_str());
+        for (const auto &[ID_Operation,result,content]: data) {
+            printf(" [%s]  [%s] -->  %s\n",ID_Operation.c_str(), result.c_str(), content.c_str());
         }
     } catch (const regex_error &err) {
         std::printf("Invalid regular expression provided.\n");
         return 1;
+    }
+    try {
+        const std::filesystem::path dir{"/Users/and/Downloads/Verpackungsplan/RTF_in.rtf"};
+        if (!exists(dir)) {
+            std::printf("Can'n open the RTF file.\n\n");
+            return 1;
+        }
+        
+        read_write_RTF ("/Users/and/Downloads/Verpackungsplan/RTF_in.rtf", "/Users/and/Downloads/Verpackungsplan/RTF_out.rtf");
+    } catch (std::exception ex){
+        std::printf(" ERROR of writing the out file ");
     }
   
     std::printf("\n OK!\n") ;
     return 0;
 }
 
-static vector<tuple<string,string,string>> matches (const path & path_to, const char*  reg_of_fir = ""){
+static vector<tuple<string,string,string>> matches (const path & path_of, const char*  reg_of_fir = ""){
     vector<tuple<string,string, string>> data_vec;
-    ifstream ifstrm{path_to.c_str()};
+    ifstream ifstrm{path_of.c_str()};
     string str_all,str_temp, str_old{};
     size_t ident=0;
     smatch result;
@@ -113,3 +126,36 @@ pair<string, string> substring (const string & source, const string & pattern){
 }
 
 //tuple<string,string,string>
+bool read_write_RTF (const path & path_of, const path & path_to){
+    ifstream in_RTF{path_of.c_str()};
+    ofstream out_RTF{path_to.c_str()};
+    smatch result;
+    string str_in;
+    ostringstream ostring_out;
+    
+    //std::match_results<BidirIt>;
+    for (;getline(in_RTF, str_in);) {
+        regex reg{"n/u#33",std::regex_constants::ECMAScript | std::regex_constants::icase};
+        if (regex_search(str_in,result,reg)) {
+            
+            out_RTF<<regex_replace(str_in, reg, "NEW")<<std::endl;
+            //std::cout<<"changed: "<< "\\"<< str_in <<"\\"<<"\n";
+            //ostring_out<<str_in<<std::endl;
+            //out_RTF<<ostring_out.str()<<std::endl;
+            //out_RTF<<str_in;
+            continue;
+        }
+        //ostring_out<<str_in;
+        //out_RTF<<ostring_out.str();
+        //out_RTF<<ostring_out.str()<<std::endl;
+        out_RTF<<str_in<<std::endl;
+    }
+    
+    //out_RTF.write(string_out, string_out.str().size()) ;
+    //ofstream out;
+    //out_RTF<<ostring_out.str();
+    //out_RTF.copyfmt(string_out);
+    out_RTF.close();
+    //std::cout<<string_out.str();
+    return true;
+}
