@@ -53,11 +53,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "&quot;/Users/and/Downloads/return/test.txt&quot;"
+            argument = "&quot;/Users/and/Downloads/Verpackungsplan/data_test_1.txt&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "&quot;\\d{6}[^(\\d|:alpha:)]&quot;"
+            argument = "&quot;(5|9)\\d{5}[^(\\d|[:alpha:]|)](\&quot;|[[:space:]])*(\:)*&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
