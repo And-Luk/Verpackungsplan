@@ -50,7 +50,6 @@ pair<string, string> substring (const string & source, const char* reg_expr= "" 
     return pair<string, string>(str_temp,result.suffix());
 }
 
-
 bool read_write_RTF (const path & path_of, const path & path_to){
     ifstream in_RTF{path_of.c_str()};
     ostringstream ostring_out;
@@ -75,7 +74,6 @@ bool read_write_RTF (const path & path_of, const path & path_to){
     write_RTF(path_to, ostring_out);
     return true;
 }
-
 
 deque<size_t> read_verpack_txt(const path & path_to, const char* reg_expr = ""){
     ifstream ifstrm{path_to.c_str()};
@@ -113,14 +111,12 @@ void write_RTF(const path & path_to, const ostringstream & ostring_out ){
 auto read_data_txt(const path & path_to, const char*reg_expr = "")
 -> multimap_data
 {
-    multimap_data data;
-    
     ifstream ifstrm{path_to.c_str()};
-    string str_all,str_temp, str_old{};
+    string str_all,str_temp, str_old;
     size_t ident=0;
     smatch result;
     pair<string, string> pair_temp;
-    
+    multimap_data data;
     for (;getline(ifstrm, str_all);) {
         regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
         if (regex_search(str_all,result,reg)) {   //regex_search(begin(s), end(s),reg)
@@ -129,20 +125,22 @@ auto read_data_txt(const path & path_to, const char*reg_expr = "")
             if (str_temp[0]=='9' ) { //&& ident ==0
                 ident = 1;
                 pair_temp = substring(result.suffix(), "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
-                str_old=str_temp;
+                
                 data.insert({(size_t)stoi(str_temp), {(size_t)stoi(pair_temp.first), pair_temp.second}});
+                str_old=str_temp;
+                //data_vec.emplace_back(    str_temp,   pair_temp.first,    pair_temp.second);
                 continue;
             }
             if (ident==1) {
                 data.insert({(size_t)stoi(str_old), {(size_t)stoi(str_temp), result.suffix()}});
+                //data_vec.emplace_back(    str_old,    str_temp,   result.suffix());
                 continue;
             }
             data.insert({(size_t)stoi(str_old), {(size_t)stoi(str_temp), result.suffix()}});
+            //data_vec.emplace_back(    str_old,    str_temp,   result.suffix());
             ident = 0;
         }
     }
- 
-    
-    
+
     return data;
 }

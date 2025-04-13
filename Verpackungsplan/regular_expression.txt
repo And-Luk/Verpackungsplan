@@ -1,6 +1,18 @@
 clear; ~/workspace/Verpackungsplan/Verpackungsplan/main ~/Downloads/Verpackungsplan/data_test_1.txt "[\\d(9|5)]\\d{5}"
 
 
+
+//  g++ main.cpp -std=c++23 -Wall -o main
+//  rm ./main; clear; g++ ./main.cpp ./functions.cpp -std=c++23 -Wall -o ./main;
+//  ./main /Users/and/Downloads/Makefile.txt DEBUG
+//  rm ./main; clear; g++ main.cpp -std=c++23 -Wall -o main; ls -alSF
+//  clear; ~/workspace/Verpackungsplan/Verpackungsplan/main ~/Downloads/return/test.txt "\\d{6}[^(\\d|:alpha:)]"
+//  clear; ~/workspace/Verpackungsplan/Verpackungsplan/main ~/Downloads/Verpackungsplan/data_test_1.txt "[\\d(9|5)]\\d{5}"
+//  clear; ~/workspace/Verpackungsplan/Verpackungsplan/main ~/Downloads/Verpackungsplan/data_test_1.txt "[\\d(9|5)]\\d{5}"
+//  rm ./main; clear; g++ ./main.cpp -std=c++23 -Wall -o ./main;
+//rm ~/workspace/Verpackungsplan/Verpackungsplan/main; clear; g++ ~/workspace/Verpackungsplan/Verpackungsplan/main.cpp -std=c++23 -Wall -o ~/workspace/Verpackungsplan/Verpackungsplan/main
+
+
 [956255	]  -->  "524993 :UFO 493 neutral GA 100
 "[\\d(9,5)]\\d{5}[^(\\d|:alpha:)]"
 
