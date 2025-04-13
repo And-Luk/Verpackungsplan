@@ -1,5 +1,6 @@
 clear; ~/workspace/Verpackungsplan/Verpackungsplan/main ~/Downloads/Verpackungsplan/data_test_1.txt "[\\d(9|5)]\\d{5}"
 
+rm ~/Downloads/Verpackungsplan/main; clear; g++ ./main.cpp ./functions.cpp -std=c++23 -Wall -o ~/Downloads/Verpackungsplan/main ; echo OK!
 
 
 //  g++ main.cpp -std=c++23 -Wall -o main
