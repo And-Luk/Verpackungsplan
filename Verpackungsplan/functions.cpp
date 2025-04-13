@@ -9,8 +9,8 @@
 vector<tuple<string,string,string>> matches (const path & path_to, const char* reg_expr = ""){
     vector<tuple<string,string, string>> data_vec;
     ifstream ifstrm{path_to.c_str()};
-    string str_all,str_temp, str_old{};
-    size_t ident=0;
+    string str_all,str_temp, str_old;
+    size_t ident{0};
     smatch result;
     pair<string, string> pair_temp;
     
@@ -22,10 +22,9 @@ vector<tuple<string,string,string>> matches (const path & path_to, const char* r
             
             if (str_temp[0]=='9' ) { //&& ident ==0
                 ident = 1;
-                pair_temp = substring(result.suffix(), "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
-                //"(5|9)\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*"
-                data_vec.emplace_back(str_temp,pair_temp.first, pair_temp.second);
                 str_old=str_temp;
+                pair_temp = substring(result.suffix(), "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
+                data_vec.emplace_back(str_temp,pair_temp.first, pair_temp.second);
                 continue;
             }
             if (ident==1) {
@@ -108,39 +107,44 @@ void write_RTF(const path & path_to, const ostringstream & ostring_out ){
     out_RTF.close();
 }
 
-auto read_data_txt(const path & path_to, const char*reg_expr = "")
--> multimap_data
-{
+auto read_data_txt(const path & path_to, const char*reg_expr = "")-> multimap_data{
     ifstream ifstrm{path_to.c_str()};
     string str_all,str_temp, str_old;
-    size_t ident=0;
+    size_t repeat{0};
     smatch result;
     pair<string, string> pair_temp;
     multimap_data data;
     for (;getline(ifstrm, str_all);) {
         regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
-        if (regex_search(str_all,result,reg)) {   //regex_search(begin(s), end(s),reg)
+        
+        if (regex_search(str_all,result,reg)) {
+            
             str_temp = result.str();
             str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-            if (str_temp[0]=='9' ) { //&& ident ==0
-                ident = 1;
-                pair_temp = substring(result.suffix(), "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
+            
+            if (str_temp[0]=='9' ) {
+                str_old = str_temp;
+                repeat = 1;
+                pair_temp = substring(result.suffix(), "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
                 
-                data.insert({(size_t)stoi(str_temp), {(size_t)stoi(pair_temp.first), pair_temp.second}});
-                str_old=str_temp;
-                //data_vec.emplace_back(    str_temp,   pair_temp.first,    pair_temp.second);
+                //data.insert({(size_t)stoi(str_temp), {(size_t)stoi(pair_temp.first), pair_temp.second}});
+                //data.emplace((size_t)stoi(str_temp), make_pair((size_t)stoi(pair_temp.first), pair_temp.second) );
+                data.insert({(size_t)stoi(str_old), {(size_t)stoi(pair_temp.first), pair_temp.second}});
+              
                 continue;
             }
-            if (ident==1) {
+            
+            if (repeat==1) {
                 data.insert({(size_t)stoi(str_old), {(size_t)stoi(str_temp), result.suffix()}});
-                //data_vec.emplace_back(    str_old,    str_temp,   result.suffix());
+                //data.emplace((size_t)stoi(str_old), make_pair((size_t)stoi(str_temp), result.suffix()) );
                 continue;
             }
-            data.insert({(size_t)stoi(str_old), {(size_t)stoi(str_temp), result.suffix()}});
-            //data_vec.emplace_back(    str_old,    str_temp,   result.suffix());
-            ident = 0;
+            
+//            data.insert({(size_t)stoi(str_old), {(size_t)stoi(str_temp), result.suffix()}});
+//            //data.emplace((size_t)stoi(str_old), make_pair((size_t)stoi(str_temp), result.suffix()) );
+//            repeat = 0;
         }
     }
-
     return data;
+    
 }

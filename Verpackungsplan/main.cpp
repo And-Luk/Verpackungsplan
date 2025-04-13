@@ -22,7 +22,7 @@ int main(int argc, const char * argv[]) {
     }
     std::printf("\n %s The Path exist\n\n",canonical(dir).c_str());
     std::printf(" [0] %s\n [1] %s\n [2] %s\n\n",argv[0],argv[1],argv[2]);
-
+//
     try {
         auto data (matches(argv[1], argv[2]));
         for (const auto &[ID_Operation,result,content]: data) {
@@ -43,22 +43,23 @@ int main(int argc, const char * argv[]) {
     } catch (std::exception ex){
         std::printf(" ERROR of writing the out file \n");
     }
-    try {
-        const std::filesystem::path dir{"/Users/and/Downloads/Verpackungsplan/verpack.txt"};
-        if (!exists(dir)) {
-            std::printf("Can'n open the verpak.txt file.\n\n");
-            return 1;
-        }
-        
-        auto list_of_ID = read_verpack_txt("/Users/and/Downloads/Verpackungsplan/verpack.txt","\\d{6}[^(\\d|:alpha:)]");
     
-        for (auto & artikel: list_of_ID) {
-            std::printf("   %i\n", (int)artikel);
-        }
-        
-    } catch (std::exception ex) {
-        std::printf(" ERROR of reading the verpack.txt file \n");
-    }
+//    try {
+//        const std::filesystem::path dir{"/Users/and/Downloads/Verpackungsplan/verpack.txt"};
+//        if (!exists(dir)) {
+//            std::printf("Can'n open the verpak.txt file.\n\n");
+//            return 1;
+//        }
+//        
+//        auto list_of_ID = read_verpack_txt("/Users/and/Downloads/Verpackungsplan/verpack.txt","\\d{6}[^(\\d|:alpha:)]");
+//    
+//        for (auto & artikel: list_of_ID) {
+//            std::printf("   %i\n", (int)artikel);
+//        }
+//        
+//    } catch (std::exception ex) {
+//        std::printf(" ERROR of reading the verpack.txt file \n");
+//    }
     try {
         const std::filesystem::path dir{"/Users/and/Downloads/Verpackungsplan/data_test_1.txt"};
         if (!exists(dir)) {
@@ -66,7 +67,7 @@ int main(int argc, const char * argv[]) {
             return 1;
         }
 
-        auto list_of_ID = read_data_txt("/Users/and/Downloads/Verpackungsplan/data_test_1.txt","\\d{6}[^(\\d|:alpha:)]");
+        auto list_of_ID = read_data_txt("/Users/and/Downloads/Verpackungsplan/data_test_1.txt","(5|9)\\d{5}[^(\\d|[:alpha:]|)](\"|[[:space:]])*");
         for (auto & artikel: list_of_ID) {
             std::printf("   %i  ->  %i  ->  %s\n", (int)artikel.first, (int)artikel.second.first, artikel.second.second.c_str());
             }
