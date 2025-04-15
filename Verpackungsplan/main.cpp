@@ -66,20 +66,21 @@ int main(int argc, const char * argv[]) {
             return 1;
         }
 
-        auto list_of_ID = read_data_txt("/Users/and/Downloads/Verpackungsplan/data_test_1.txt","(5|9)\\d{5}[^(\\d|[:alpha:]|)](\"|[[:space:]])*");
-        
-//        for (auto & artikel: list_of_ID) {
-//            std::printf("   %i    %i    %s\n", (int)artikel.first, (int)artikel.second.first, artikel.second.second.c_str());
-//            }
-//        std::printf("and   \n\n\n");
+        //auto list_of_ID = read_data_txt("/Users/and/Downloads/Verpackungsplan/data_test_1.txt","(5|9)\\d{5}[^(\\d|[:alpha:]|)](\"|[[:space:]])*");
+        auto list_of_ID = new_read_data_txt("/Users/and/Downloads/Verpackungsplan/data_test_1.txt","(5|9)\\d{5}[^(\\d|[:alpha:]|)](\"|[[:space:]])*");
         
         
-        for (auto it =  list_of_ID.upper_bound((size_t)955342) ; it == list_of_ID.lower_bound((size_t)955342); ++it) {
-            std::printf("element   %i  ->  %i  ->  %s\n", (int)it->first, (int)it->second.first, it->second.second.c_str());
+        size_t search_element = 955342;
+        
+        for (auto it =  list_of_ID.lower_bound(search_element) ; it != list_of_ID.upper_bound(search_element); ++it) {
+            
+            //std::printf("   [%i]    %i  ->  %s\n", (int)it->first, (int)get<0>((*it).second), (get<2>((*it).second)).c_str() );
+            
+            std::printf("   [%i]    %i  ->  %s\n    => %i St.\n", (int)it->first, (int)get<0>((*it).second), (get<2>((*it).second)).c_str(), (int)get<1>((*it).second) );
+            
             }
-        cout<<"955342"<<" "<< list_of_ID.find((size_t)955342)->second.first<< "    "<< list_of_ID.find((size_t)955342)->second.second;
-        //cout<< list_of_ID.find((size_t)955342)->second.second;
-
+  
+        
     } catch (std::exception ex) {
         std::printf(" ERROR of reading the verpack.txt file to DATA MULTIMAP \n\n");
         std::printf("\n An exception!\n") ;

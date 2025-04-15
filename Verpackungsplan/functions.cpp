@@ -101,7 +101,7 @@ void write_RTF(const path & path_to, const ostringstream & ostring_out ){
     out_RTF.close();
 }
 
-auto read_data_txt(const path & path_to, const char*reg_expr = "")-> multimap_data{
+auto read_data_txt(const path & path_to, const char* reg_expr = "")-> multimap_data{
     ifstream ifstrm{path_to.c_str()};
     string str_all,str_temp, str_old;
     smatch result;
@@ -125,4 +125,56 @@ auto read_data_txt(const path & path_to, const char*reg_expr = "")-> multimap_da
     }
     return data;
     
+}
+
+auto new_read_data_txt(const path & path_to, const char* reg_expr = "")-> new_multimap_data{
+    ifstream ifstrm{path_to.c_str()};
+    string str_all,str_temp, str_old;
+    smatch result;
+    //pair<string, string> pair_temp;
+    tup_element tuple_temp;
+
+    new_multimap_data data;
+    for (;getline(ifstrm, str_all);) {
+        regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
+        if (regex_search(str_all,result,reg)) {
+            str_temp = result.str();
+            str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
+            //get<1>(tuple_temp)= 100;
+            
+            if (str_temp[0]=='9' ) {
+                str_old = str_temp;
+                //pair_temp = substring(result.suffix(), "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
+                tuple_temp = new_substring(result.suffix(), "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
+                //get<1>(tuple_temp)= 100;
+                data.insert({(size_t)stoi(str_old), tuple_temp});
+                continue;
+            }
+            get<0>(tuple_temp)= stoi(str_temp);
+            get<1>(tuple_temp)= 99;
+            get<2>(tuple_temp)= result.suffix(); //pair_temp.second;
+            data.insert({(size_t)stoi(str_old), tuple_temp});
+        }
+    }
+    return data;
+    
+}
+
+auto new_substring (const string & source, const char* reg_expr= "")-> tup_element{
+    
+    new_multimap_data data;
+    smatch result;
+    string str_temp;
+    //tup_element tuple_temp;
+    regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
+    if (regex_search(source,result,reg)) {
+        str_temp = result.str();
+        str_temp.erase(6, str_temp.length());  // shrink to 6 digits
+        //get<1>(tuple_temp)= 100;
+        return tup_element(stoi(str_temp), 100 ,result.suffix());
+    }
+    
+    //return pair<string, string>(str_temp,result.suffix());
+    return tup_element{0, 0, ""};  //stoi(result.suffix())
+    //return data;
 }
