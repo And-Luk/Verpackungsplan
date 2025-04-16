@@ -71,14 +71,19 @@ int main(int argc, const char * argv[]) {
         
         
         size_t search_element = 955342;
-        
         for (auto it =  list_of_ID.lower_bound(search_element) ; it != list_of_ID.upper_bound(search_element); ++it) {
-            
             //std::printf("   [%i]    %i  ->  %s\n", (int)it->first, (int)get<0>((*it).second), (get<2>((*it).second)).c_str() );
-            
             std::printf("   [%i]    %i  ->  %s\n    => %i St.\n", (int)it->first, (int)get<0>((*it).second), (get<2>((*it).second)).c_str(), (int)get<1>((*it).second) );
-            
             }
+        
+        
+//        for (auto & it :list_of_ID) {
+//            
+//            std::printf("   [%i]    %i  ->  %s\n", (int)it.first, (int)get<0>((it).second), (get<2>((it).second)).c_str() );
+//            //std::printf("   [%i]    %i  ->  %s\n    => %i St.\n", (int)it->first, (int)get<0>((*it).second), (get<2>((*it).second)).c_str(), (int)get<1>((*it).second) );
+//            
+//            }
+        
   
         
     } catch (std::exception ex) {
