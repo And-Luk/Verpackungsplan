@@ -8,13 +8,18 @@
 #include "header.h"
 
 
-vector<tuple<string, string, string>> matches (const path &, const char*);
+auto matches (const path &, const char*)-> vector<tuple<string, string, string>>;
 
-pair<string, string> substring (const string & , const char*);
+auto substring (const string & , const char*)-> pair<string, string>;
 
 bool read_write_RTF (const path &, const path &);
+auto find_and_replace (const string &, const char*, const char*)-> string;
+auto find_the_desired_string (const string & , const char*)-> bool;
 
-deque<size_t> read_verpack_txt(const path &, const char*);
+
+
+auto read_verpack_txt(const path &, const char*)-> deque<pair<size_t, size_t>>;
+auto substring_verpack_txt(const string & , const char*)-> deque<size_t>;
 
 void write_RTF(const path &, const ostringstream &);
 

@@ -6,7 +6,7 @@
 //
 #include "functions.h"
 
-vector<tuple<string,string,string>> matches (const path & path_to, const char* reg_expr = ""){
+auto matches (const path & path_to, const char* reg_expr = "")-> vector<tuple<string,string,string>>{
     vector<tuple<string,string, string>> data_vec;
     ifstream ifstrm{path_to.c_str()};
     string str_all,str_temp, str_old;
@@ -32,7 +32,7 @@ vector<tuple<string,string,string>> matches (const path & path_to, const char* r
     return data_vec;
 }
     
-pair<string, string> substring (const string & source, const char* reg_expr= "" ){
+auto substring (const string & source, const char* reg_expr= "" )-> pair<string, string>{
     smatch result;
     string str_temp;
     regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
@@ -50,14 +50,16 @@ bool read_write_RTF (const path & path_of, const path & path_to){
     string str_in;
     size_t count= 0;
     for (;getline(in_RTF, str_in);) {
-        regex reg_end{"\\\\cf0 \\\\cell \\\\row",std::regex_constants::ECMAScript | std::regex_constants::icase};
-        if (regex_search(str_in,result,reg_end) && count==32) {  //count to 32 string in in the blat
-            ostring_out<<str_in<<std::endl<<"}%"<<endl;
-            return true;
+        
+        
+        if ( count==32 && find_the_desired_string(str_in,"\\\\cf0 \\\\cell \\\\row") ) {
+            ostring_out<<find_and_replace(str_in, "\\\\cf0 \\\\cell \\\\row", "}%")<<std::endl;
+            break;
         }
-        regex reg{"n/u#",std::regex_constants::ECMAScript | std::regex_constants::icase};
-        if (regex_search(str_in,result,reg)) {
-            ostring_out<<regex_replace(str_in, reg, "a new replaced string")<<std::endl;
+
+        
+        if (find_the_desired_string(str_in,"n/a#")) {
+            ostring_out<<find_and_replace(str_in, "n/a#", "2025-05-18")<<std::endl;
             count++;
             continue;
         }
@@ -68,7 +70,28 @@ bool read_write_RTF (const path & path_of, const path & path_to){
     return true;
 }
 
-deque<size_t> read_verpack_txt(const path & path_to, const char* reg_expr = ""){
+auto find_the_desired_string (const string & str_in, const char* reg_expr = "")-> bool{
+    regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
+    if (regex_search(str_in,reg)) {
+        return true;
+    }
+    return false;
+}
+
+
+auto find_and_replace (const string & str_in, const char* reg_expr= "", const char* replacement= "")-> string{
+    regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
+    return regex_replace(str_in, reg, replacement);
+}
+
+
+
+
+
+
+
+
+auto read_verpack_txt(const path & path_to, const char* reg_expr = "")-> deque<pair<size_t, size_t>> {
     ifstream ifstrm{path_to.c_str()};
     
     string str_in,str_temp;
@@ -78,18 +101,40 @@ deque<size_t> read_verpack_txt(const path & path_to, const char* reg_expr = ""){
         throw std::exception().what();
     }
 
-    deque<size_t> data_vec;
+    deque<pair<size_t, size_t>> data_vec;
     regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
     for (;getline(ifstrm, str_in);) {
 
         if (regex_search(str_in,result,reg)) {
             str_temp = result.str();
-            str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-            data_vec.emplace_back( std::stoi(str_temp));
+            str_in = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
+            str_temp =result.suffix();
+            data_vec.emplace_back(make_pair(std::stoi(str_in), 0) );
         }
     }
     return data_vec;
 }
+
+auto substring_verpack_txt(const string & source, const char* reg_expr= "")-> deque<size_t>{
+    
+    string str_in,str_temp;
+    smatch result;
+
+    deque<size_t> data_vec;
+    regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
+
+        if (regex_search(str_in,result,reg)) {
+            str_temp = result.str();
+            str_in = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
+            str_temp =result.suffix();
+            data_vec.emplace_back(std::stoi(str_temp) );
+        }
+
+    return data_vec;
+    
+}
+
+
 
 void write_RTF(const path & path_to, const ostringstream & ostring_out ){
     ofstream out_RTF{path_to.c_str()};
@@ -140,13 +185,13 @@ auto new_read_data_txt(const path & path_to, const char* reg_expr = "")-> new_mu
         if (regex_search(str_all,result,reg)) {
             str_temp = result.str();
             str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-            //get<1>(tuple_temp)= 100;
+            get<1>(tuple_temp)= 100;
             
             if (str_temp[0]=='9' ) {
                 str_old = str_temp;
-                //pair_temp = substring(result.suffix(), "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
+                
                 tuple_temp = new_substring(result.suffix(), "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
-                //get<1>(tuple_temp)= 100;
+                //get<1>(tuple_temp)= 98;
                 data.insert({(size_t)stoi(str_old), tuple_temp});
                 continue;
             }
@@ -175,6 +220,6 @@ auto new_substring (const string & source, const char* reg_expr= "")-> tup_eleme
     }
     
     //return pair<string, string>(str_temp,result.suffix());
-    return tup_element{0, 0, ""};  //stoi(result.suffix())
+    return tup_element{0, 0, "substring does not exist"};  //stoi(result.suffix())
     //return data;
 }
