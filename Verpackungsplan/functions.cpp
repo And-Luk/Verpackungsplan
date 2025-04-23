@@ -6,42 +6,7 @@
 //
 #include "functions.h"
 
-auto matches (const path & path_to, const char* reg_expr = "")-> vector<tuple<string,string,string>>{
-    vector<tuple<string,string, string>> data_vec;
-    ifstream ifstrm{path_to.c_str()};
-    string str_all,str_temp, str_old;
 
-    smatch result;
-    pair<string, string> pair_temp;
-    
-    for (;getline(ifstrm, str_all);) {
-        regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
-        if (regex_search(str_all,result,reg)) {
-            str_temp = result.str();
-            str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-            
-            if (str_temp[0]=='9' ) {
-                str_old=str_temp;
-                pair_temp = substring(result.suffix(), "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
-                data_vec.emplace_back(str_temp,pair_temp.first, pair_temp.second);
-                continue;
-            }
-            data_vec.emplace_back(str_old, str_temp, result.suffix());
-        }
-    }
-    return data_vec;
-}
-  
-auto substring (const string & source, const char* reg_expr= "" )-> pair<string, string>{
-    smatch result;
-    string str_temp;
-    regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
-    if (regex_search(source,result,reg)) {
-        str_temp = result.str();
-        str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-    }
-    return pair<string, string>(str_temp,result.suffix());
-}
 
 bool read_write_RTF (const path & path_of, const path & path_to){
     ifstream in_RTF{path_of.c_str()};
@@ -84,30 +49,6 @@ auto find_and_replace (const string & str_in, const char* reg_expr= "", const ch
 }
 
 
-
-auto read_verpack_txt(const path & path_to, const char* reg_expr = "")-> deque_of_pair_size_t {
-    ifstream ifstrm{path_to.c_str()};
-    
-    string str_in, str_temp;
-    smatch result;
-    if (!exists(path_to)) {
-        std::printf("Path to Verpackungsplan.txt dose not exist.\n\n");
-        throw std::exception().what();
-    }
-
-    deque<pair<size_t, size_t>> data_vec;
-    regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
-    for (;getline(ifstrm, str_in);) {
-
-        if (regex_search(str_in,result,reg)) {
-            str_temp = result.str();
-            str_in = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-            str_temp =result.suffix();
-            data_vec.emplace_back(make_pair(std::stoi(str_in), 0) );
-        }
-    }
-    return data_vec;
-}
 
 auto new_read_verpack_txt(const path & path_to, const char* reg_expr_1 = "" , const char* reg_expr_2 = "")-> vector_of_pair_size_t{
     ifstream ifstrm{path_to.c_str()};
@@ -155,8 +96,6 @@ auto new_read_verpack_txt(const path & path_to, const char* reg_expr_1 = "" , co
 }
 
 
-
-
 auto substring_verpack_txt(const string & source, const char* reg_expr= "")-> deque<size_t>{
     
     string str_in,str_temp;
@@ -177,7 +116,6 @@ auto substring_verpack_txt(const string & source, const char* reg_expr= "")-> de
 }
 
 
-
 void write_RTF(const path & path_to, const ostringstream & ostring_out ){
     ofstream out_RTF{path_to.c_str()};
     if (!exists(path_to)) {
@@ -188,99 +126,12 @@ void write_RTF(const path & path_to, const ostringstream & ostring_out ){
     out_RTF.close();
 }
 
-auto read_data_txt(const path & path_to, const char* reg_expr = "")-> multimap_data{
+
+
+
+auto new2_read_data_txt(const path & path_to, const char* reg_expr_1 = "", const char* reg_expr_2 = "" , const char* reg_expr_3 = "")-> new_multimap_data{
     ifstream ifstrm{path_to.c_str()};
-    string str_all,str_temp, str_old;
-    smatch result;
-    pair<string, string> pair_temp;
-    multimap_data data;
-    for (;getline(ifstrm, str_all);) {
-        regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
-        if (regex_search(str_all,result,reg)) {
-            str_temp = result.str();
-            str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-            
-            if (str_temp[0]=='9' ) {
-                str_old = str_temp;
-                pair_temp = substring(result.suffix(), "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
-                data.insert({(size_t)stoi(str_old), {(size_t)stoi(pair_temp.first), pair_temp.second}});
-              
-                continue;
-            }
-            data.insert({(size_t)stoi(str_old), {(size_t)stoi(str_temp), result.suffix()}});
-        }
-    }
-    return data;
-    
-}
-
-auto new_read_data_txt(const path & path_to, const char* reg_expr = "")-> new_multimap_data{
-    ifstream ifstrm{path_to.c_str()};
-    string str_all,str_temp, str_old, str_suffix;
-    smatch result;
-    size_t shrink=0;
-    //pair<string, string> pair_temp;
-    tup_element tuple_temp;
-
-    new_multimap_data data;
-    for (;getline(ifstrm, str_all);) {
-        regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
-        if (regex_search(str_all,result,reg)) {
-            str_temp = result.str();
-            str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-            get<1>(tuple_temp)= 0.07;
-            
-            if (str_temp[0]=='9' ) {
-                str_old = str_temp;
-                
-                tuple_temp = new_substring(result.suffix(), "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
-                //get<1>(tuple_temp)= 98;
-                data.insert({(size_t)stoi(str_old), tuple_temp});
-                continue;
-            }
-            get<0>(tuple_temp)= stoi(str_temp);
-            get<1>(tuple_temp)= 0.08;
-            
-            str_suffix =result.suffix();
-            shrink= str_suffix.find('=');
-            str_suffix.erase(shrink, str_suffix.length());
-            
-            get<2>(tuple_temp)= str_suffix; //pair_temp.second;
-            data.insert({(size_t)stoi(str_old), tuple_temp});
-        }
-    }
-    return data;
-    
-}
-
-auto new_substring (const string & source, const char* reg_expr= "")-> tup_element{
-    
-    new_multimap_data data;
-    smatch result;
-    string str_temp, str_suffix;
-    size_t shrink=0;
-    //tup_element tuple_temp;
-    regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
-    if (regex_search(source,result,reg)) {
-        str_temp = result.str();
-        
-        str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-        //get<1>(tuple_temp)= 100;
-        str_suffix =result.suffix();
-        shrink= str_suffix.find('=');
-        str_suffix.erase(shrink, str_suffix.length());
-        return tup_element(stoi(str_temp), 1 , str_suffix);
-    }
-    
-    //return pair<string, string>(str_temp,result.suffix());
-    return tup_element{1, 0.07, "substring does not exist"};  //stoi(result.suffix())
-    //return data;
-}
-
-
-auto new2_read_data_txt(const path & path_to, const char* reg_expr_1 = "", const char* reg_expr_2 = "")-> new_multimap_data{
-    ifstream ifstrm{path_to.c_str()};
-    string str_all,str_temp, str_old;
+    string str_all,str_temp, str_old;  //str_old{"0"}
     smatch result;
     //pair<string, string> pair_temp;
     tup_element tuple_temp;
@@ -297,16 +148,28 @@ auto new2_read_data_txt(const path & path_to, const char* reg_expr_1 = "", const
                 str_old = str_temp;
                 
                 //tuple_temp = new_substring(result.suffix(), "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
+                // tuple_temp = new2_substring(result.suffix(), "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*" , "[[:digit:]]+");
+                //get<1>(tuple_temp)= 98;            //"5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*" , reg_expr_2
                 
-                tuple_temp = new2_substring(result.suffix(), "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*" , "[[:digit:]]+");
-                //get<1>(tuple_temp)= 98;
-                data.insert({(size_t)stoi(str_old), tuple_temp});
+                tuple_temp = new2_substring(result.suffix(), reg_expr_2 , reg_expr_3);
+               
+                data.insert( {(size_t)stoi(str_old), tuple_temp} );
                 continue;
             }
-            get<0>(tuple_temp)= stoi(str_temp);
-            get<1>(tuple_temp)= 0.08;
-            get<2>(tuple_temp)= result.suffix(); //pair_temp.second;
-            data.insert({(size_t)stoi(str_old), tuple_temp});
+            
+            if (str_temp[0]=='5' ) {
+                
+                tuple_temp = new2_substring(str_all, reg_expr_2 , reg_expr_3);
+                
+                
+                get<0>(tuple_temp)= stoi(str_temp);
+                //get<1>(tuple_temp)= 0.08;
+                //get<2>(tuple_temp)= result.suffix(); //pair_temp.second;
+                data.insert({(size_t)stoi(str_old), tuple_temp});
+            }
+            
+            
+            
         }
     }
     return data;
@@ -339,9 +202,12 @@ auto new2_substring (const string & source, const char* reg_expr_1 = "" , const 
         str_suffix_2 = str_suffix;
         
         shrink= str_suffix.find('=');
-        str_suffix.erase(shrink, str_suffix.length());
-        str_suffix_2.erase(0, shrink);
-        get<2>(tuple_temp)= str_suffix_2;
+       str_suffix.erase(shrink, str_suffix.length());
+        
+        str_suffix_2 = str_suffix_2.substr(shrink); ///exeption
+        //str_suffix = source.    str_suffix_2;
+        
+        get<2>(tuple_temp)= str_suffix;
 
         
         if (regex_search( str_suffix_2, result, reg_2)) {
@@ -361,3 +227,154 @@ auto new2_substring (const string & source, const char* reg_expr_1 = "" , const 
     return tup_element{0, float_temp, "substring does not exist"};  //stoi(result.suffix())
     
 }
+
+
+//auto read_data_txt(const path & path_to, const char* reg_expr = "")-> multimap_data{
+//    ifstream ifstrm{path_to.c_str()};
+//    string str_all,str_temp, str_old;
+//    smatch result;
+//    pair<string, string> pair_temp;
+//    multimap_data data;
+//    for (;getline(ifstrm, str_all);) {
+//        regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
+//        if (regex_search(str_all,result,reg)) {
+//            str_temp = result.str();
+//            str_temp.erase(6, str_temp.length());  // shrink to 6 digits
+//
+//            if (str_temp[0]=='9' ) {
+//                str_old = str_temp;
+//                pair_temp = substring(result.suffix(), "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
+//                data.insert({(size_t)stoi(str_old), {(size_t)stoi(pair_temp.first), pair_temp.second}});
+//
+//                continue;
+//            }
+//            data.insert({(size_t)stoi(str_old), {(size_t)stoi(str_temp), result.suffix()}});
+//        }
+//    }
+//    return data;
+//
+//}
+
+//auto new_read_data_txt(const path & path_to, const char* reg_expr = "")-> new_multimap_data{
+//    ifstream ifstrm{path_to.c_str()};
+//    string str_all,str_temp, str_old, str_suffix;
+//    smatch result;
+//    size_t shrink=0;
+//    //pair<string, string> pair_temp;
+//    tup_element tuple_temp;
+//
+//    new_multimap_data data;
+//    for (;getline(ifstrm, str_all);) {
+//        regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
+//        if (regex_search(str_all,result,reg)) {
+//            str_temp = result.str();
+//            str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
+//            get<1>(tuple_temp)= 0.07;
+//
+//            if (str_temp[0]=='9' ) {
+//                str_old = str_temp;
+//
+//                tuple_temp = new_substring(result.suffix(), "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
+//                //get<1>(tuple_temp)= 98;
+//                data.insert({(size_t)stoi(str_old), tuple_temp});
+//                continue;
+//            }
+//            get<0>(tuple_temp)= stoi(str_temp);
+//            get<1>(tuple_temp)= 0.08;
+//
+//            str_suffix =result.suffix();
+//            shrink= str_suffix.find('=');
+//            str_suffix.erase(shrink, str_suffix.length());
+//
+//            get<2>(tuple_temp)= str_suffix; //pair_temp.second;
+//            data.insert({(size_t)stoi(str_old), tuple_temp});
+//        }
+//    }
+//    return data;
+//
+//}
+
+//auto new_substring (const string & source, const char* reg_expr= "")-> tup_element{
+//
+//    new_multimap_data data;
+//    smatch result;
+//    string str_temp, str_suffix;
+//    size_t shrink=0;
+//    //tup_element tuple_temp;
+//    regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
+//    if (regex_search(source,result,reg)) {
+//        str_temp = result.str();
+//
+//        str_temp.erase(6, str_temp.length());  // shrink to 6 digits
+//        //get<1>(tuple_temp)= 100;
+//        str_suffix =result.suffix();
+//        shrink= str_suffix.find('=');
+//        str_suffix.erase(shrink, str_suffix.length());
+//        return tup_element(stoi(str_temp), 1 , str_suffix);
+//    }
+//
+//    //return pair<string, string>(str_temp,result.suffix());
+//    return tup_element{1, 0.07, "substring does not exist"};  //stoi(result.suffix())
+//    //return data;
+//}
+
+//auto read_verpack_txt(const path & path_to, const char* reg_expr = "")-> deque_of_pair_size_t {
+//    ifstream ifstrm{path_to.c_str()};
+//
+//    string str_in, str_temp;
+//    smatch result;
+//    if (!exists(path_to)) {
+//        std::printf("Path to Verpackungsplan.txt dose not exist.\n\n");
+//        throw std::exception().what();
+//    }
+//
+//    deque<pair<size_t, size_t>> data_vec;
+//    regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
+//    for (;getline(ifstrm, str_in);) {
+//
+//        if (regex_search(str_in,result,reg)) {
+//            str_temp = result.str();
+//            str_in = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
+//            str_temp =result.suffix();
+//            data_vec.emplace_back(make_pair(std::stoi(str_in), 0) );
+//        }
+//    }
+//    return data_vec;
+//}
+
+//auto matches (const path & path_to, const char* reg_expr = "")-> vector<tuple<string,string,string>>{
+//    vector<tuple<string,string, string>> data_vec;
+//    ifstream ifstrm{path_to.c_str()};
+//    string str_all,str_temp, str_old;
+//
+//    smatch result;
+//    pair<string, string> pair_temp;
+//
+//    for (;getline(ifstrm, str_all);) {
+//        regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
+//        if (regex_search(str_all,result,reg)) {
+//            str_temp = result.str();
+//            str_temp.erase(6, str_temp.length());  // shrink to 6 digits
+//
+//            if (str_temp[0]=='9' ) {
+//                str_old=str_temp;
+//                pair_temp = substring(result.suffix(), "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*");
+//                data_vec.emplace_back(str_temp,pair_temp.first, pair_temp.second);
+//                continue;
+//            }
+//            data_vec.emplace_back(str_old, str_temp, result.suffix());
+//        }
+//    }
+//    return data_vec;
+//}
+  
+//auto substring (const string & source, const char* reg_expr= "" )-> pair<string, string>{
+//    smatch result;
+//    string str_temp;
+//    regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
+//    if (regex_search(source,result,reg)) {
+//        str_temp = result.str();
+//        str_temp.erase(6, str_temp.length());  // shrink to 6 digits
+//    }
+//    return pair<string, string>(str_temp,result.suffix());
+//}

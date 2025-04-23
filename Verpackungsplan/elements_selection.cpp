@@ -12,7 +12,7 @@ elements_selection::elements_selection(vector_of_pair_size_t verpak, new_multima
     for (auto & ID_OP : verpak) {
         for (auto it =  data.lower_bound(ID_OP.first) ; it != data.upper_bound(ID_OP.first); ++it) {
             temp_element = (it)->second;
-            get<1>(temp_element) = ID_OP.second * (size_t)get<1>((it)->second);
+            get<1>(temp_element) = ID_OP.second * get<1>((it)->second);
             internal_data.insert({ID_OP.first , temp_element});
         }
     }
@@ -29,8 +29,8 @@ void elements_selection::read_write_RTF(const path & path_in, const path & path_
     ifstream in_RTF{path_in.c_str()};
     smatch result;
     string str_in,  title ,  article_next;
-    size_t article = 0, article_old = 0,  repeat_article = 0, material = 0, amount = 0 , count =0;
-    
+    size_t article = 0, article_old = 0,  repeat_article = 0, material = 0,  count =0;
+    float amount = 0 ;
     for (auto & ID_OP : internal_data) {
                 
         temp_element = ID_OP.second;
@@ -44,15 +44,13 @@ void elements_selection::read_write_RTF(const path & path_in, const path & path_
         if ( repeat_article == 0  || count ==0 ) {
             article_old = article;
         }
-        
-        
+                
         if (count ==1 &&  article == article_old) {
             repeat_article = 1;
             
             article_next ="";
         }
-        
-        
+                
         for (;getline(in_RTF, str_in);) {
             
             if (repeat_article == 1 && article != article_old) {
@@ -78,7 +76,6 @@ void elements_selection::read_write_RTF(const path & path_in, const path & path_
                 }
             }
             
-            
             if (find_the_desired_string(str_in,"n/a#")) {
                 ostring_out<< find_and_replace(str_in, "n/a#",  article_next.c_str() )<<std::endl;  //  article_next   // to_string(article).c_str()
                 continue;
@@ -102,7 +99,8 @@ void elements_selection::read_write_RTF(const path & path_in, const path & path_
         }
         
     }
-    
+   
+    //END OF THE FILE
     for (;getline(in_RTF, str_in);) {
         
         if (find_the_desired_string(str_in,"\\\\cf0 \\\\cell \\\\row") ) {
@@ -113,5 +111,4 @@ void elements_selection::read_write_RTF(const path & path_in, const path & path_
     }
     
     write_RTF(path_out, ostring_out);
-    
 }

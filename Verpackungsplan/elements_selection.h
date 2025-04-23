@@ -11,7 +11,7 @@
 
 
 class elements_selection {
-    new_multimap_data internal_data;
+    new_multimap_data internal_data; ///vector<pair<size_t, float>>
     tup_element temp_element;
     ostringstream ostring_out;
     
