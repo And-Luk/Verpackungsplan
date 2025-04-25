@@ -1,4 +1,0 @@
-g++ main.cpp -std=c++23 -Wall -o main
-
-
- /Users/and/workspace/Verpackungsplan/Verpackungsplan/main.cpp
