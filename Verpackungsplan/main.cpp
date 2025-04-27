@@ -12,10 +12,11 @@ int main(int argc, const char * argv[]) {
     
     vector_of_pair_size_t verpak{
         read_verpack_txt("/Users/and/Downloads/Verpackungsplan/verpack.txt",
-                             "9\\d{5}[^(\\d|:alpha:)]",
-                             "Tage[^:alpha:]")};
-
-    new_multimap_data data{
+                         "9\\d{5}[^(\\d|:alpha:)]",
+                         "Tage[^:alpha:]",
+                         "[[:digit:]]+")};
+    
+    multimap_data data{
         read_data_txt( "/Users/and/Downloads/Verpackungsplan/data.txt",
                            "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\"|[[:space:]])*" ,
                            "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*",
@@ -23,8 +24,9 @@ int main(int argc, const char * argv[]) {
     
     
     elements_selection dumpf{verpak, data};
-    dumpf.read_write_RTF("/Users/and/Downloads/Verpackungsplan/RTF_in.rtf",
-                         "/Users/and/Downloads/Verpackungsplan/RTF_out.rtf");
+    
+        dumpf.new_read_write_RTF("/Users/and/Downloads/Verpackungsplan/RTF_in.rtf",
+                             "/Users/and/Downloads/Verpackungsplan/RTF_out.rtf");
     
     
     std::printf("\n OK!\n") ;

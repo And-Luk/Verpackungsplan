@@ -28,25 +28,27 @@ auto find_the_desired_string (const string & str_in, const char* reg_expr = "")-
     return false;
 }
 
-auto find_and_replace (const string & str_in, const char* reg_expr= "", const char* replacement= "")-> string{
+auto find_and_replace (const string & str_in, const char* reg_expr= "", const string replacement= "")-> string{
     regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
-    return regex_replace(str_in, reg, replacement);
+    return regex_replace(str_in, reg,  replacement );  //replacement
+    
 }
 
 
 
-auto read_verpack_txt(const path & path_to, const char* reg_expr_1 = "" , const char* reg_expr_2 = "")-> vector_of_pair_size_t{
+auto read_verpack_txt(const path & path_to, const char* reg_expr_1 = "" , const char* reg_expr_2 = "", const char* reg_expr_3= "")-> vector_of_pair_size_t{
     ifstream ifstrm{path_to.c_str()};
     vector_of_pair_size_t data;
     
     string str_in, str_temp, str_suffix;
     smatch result;
+    pair<size_t, size_t> temp_pair;
     regex reg_1{reg_expr_1,std::regex_constants::ECMAScript | std::regex_constants::icase};
     regex reg_2{reg_expr_2,std::regex_constants::ECMAScript | std::regex_constants::icase};
-    pair<size_t, size_t> temp_pair;
+    regex reg_3{reg_expr_3,std::regex_constants::ECMAScript | std::regex_constants::icase};
+   
     
     for (;getline(ifstrm, str_in);) {
-
         if (regex_search(str_in, result, reg_1)) {
             str_temp = result.str();
             str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
@@ -54,21 +56,18 @@ auto read_verpack_txt(const path & path_to, const char* reg_expr_1 = "" , const 
             temp_pair.second = 1;
             str_suffix =result.suffix();
             if (regex_search(str_suffix, result, reg_2)) {
-                
                 str_temp =result.suffix();
-                
-                
-                regex reg_3{"[[:digit:]]+",std::regex_constants::ECMAScript | std::regex_constants::icase};
+                //regex reg_3{"[[:digit:]]+",std::regex_constants::ECMAScript | std::regex_constants::icase};
                 
                 if (regex_search(str_temp, result, reg_3)) {
                     //str_temp.clear();
                     str_temp = result.str();
                     temp_pair.second = (size_t)std::stoi( str_temp);
-                    data.emplace_back(temp_pair);
+                    //data.emplace_back(temp_pair);
+                    data.insert(data.end(), temp_pair);
                     continue;
                     }
             }
-
                 temp_pair.second = 1;
                 data.emplace_back(temp_pair);
                 continue;
@@ -100,17 +99,14 @@ auto substring_verpack_txt(const string & source, const char* reg_expr= "")-> de
 }
 
 
-
-
-
-auto read_data_txt(const path & path_to, const char* reg_expr_1 = "", const char* reg_expr_2 = "" , const char* reg_expr_3 = "")-> new_multimap_data{
+auto read_data_txt(const path & path_to, const char* reg_expr_1 = "", const char* reg_expr_2 = "" , const char* reg_expr_3 = "")-> multimap_data{
     ifstream ifstrm{path_to.c_str()};
     string str_all,str_temp, str_old;  //str_old{"0"}
     smatch result;
     //pair<string, string> pair_temp;
     tup_element tuple_temp;
 
-    new_multimap_data data;
+    multimap_data data;
     for (;getline(ifstrm, str_all);) {
         regex reg{reg_expr_1, std::regex_constants::ECMAScript | std::regex_constants::icase};
         if (regex_search(str_all,result,reg)) {
@@ -194,3 +190,10 @@ auto substring (const string & source, const char* reg_expr_1 = "" , const char*
 }
 
 
+bool find_and_change( string &str_in , const char* pattern, const char* replacement) {
+    if (find_the_desired_string(str_in,pattern)) {
+        str_in = find_and_replace(str_in, pattern, replacement );
+        return true;
+    }
+    return false;
+}
