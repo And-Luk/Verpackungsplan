@@ -4,31 +4,50 @@
 //
 //  Created by Andrei Lukashevich on 2025-03-25.
 
-
 #include "functions.h"
 #include "elements_selection.h"
 
+const char * verpackungsplan_file   {"/Users/and/Downloads/Verpackungsplan/verpack.txt"};
+const char * data_file                      {"/Users/and/Downloads/Verpackungsplan/data.txt"};
+const char* RTF_template_file        {"/Users/and/Downloads/Verpackungsplan/RTF_in.rtf"};
+const char* RTF_out_file                {"/Users/and/Downloads/Verpackungsplan/RTF_out.rtf"};
+
 int main(int argc, const char * argv[]) {
     
-    vector_of_pair_size_t verpak{
-        read_verpack_txt("/Users/and/Downloads/Verpackungsplan/verpack.txt",
-                         "9\\d{5}[^(\\d|:alpha:)]",
-                         "Tage[^:alpha:]",
-                         "[[:digit:]]+")};
+        try {
+            const std::filesystem::path dir{verpackungsplan_file};
+            if (!exists(dir)) {
+                std::printf("Can'n open the verpack.txt file.\n\n");
+                return 1;
+            }
+           // read_write_RTF ("/Users/and/Downloads/Verpackungsplan/RTF_in.rtf", "/Users/and/Downloads/Verpackungsplan/RTF_out.rtf");
+           
+        } catch (std::exception ex){
+            std::printf(" an error.\n\n");
+        }
     
-    multimap_data data{
-        read_data_txt( "/Users/and/Downloads/Verpackungsplan/data.txt",
-                           "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\"|[[:space:]])*" ,
-                           "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*",
-                           "([0-9]*[.])?[0-9]+" ) };  
-    
-    
-    elements_selection dumpf{verpak, data};
-    
-        dumpf.new_read_write_RTF("/Users/and/Downloads/Verpackungsplan/RTF_in.rtf",
-                             "/Users/and/Downloads/Verpackungsplan/RTF_out.rtf");
-    
-    
+    try {
+        vector_of_pair_size_t verpak{
+            read_verpack_txt(verpackungsplan_file,
+                             "9\\d{5}[^(\\d|:alpha:)]",
+                             "Tage[^:alpha:]",
+                             "[[:digit:]]+")};
+        
+        multimap_data data{
+            read_data_txt( data_file,
+                               "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\"|[[:space:]])*" ,
+                               "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*",
+                               "([0-9]*[.])?[0-9]+" ) };
+        
+        
+        elements_selection dumpf{verpak, data};
+        dumpf.read_write_RTF(RTF_template_file, RTF_out_file);
+    } catch (exception ex) {
+        std::printf("\n something didn't go as planned!\n") ;
+        return 1;
+    }
+
+        
     std::printf("\n OK!\n") ;
     return 0;
 }
@@ -62,14 +81,3 @@ int main(int argc, const char * argv[]) {
 //        return 1;
 //    }
     
-//    try {
-//        const std::filesystem::path dir{"/Users/and/Downloads/Verpackungsplan/RTF_in.rtf"};
-//        if (!exists(dir)) {
-//            std::printf("Can'n open the RTF file.\n\n");
-//            return 1;
-//        }
-//
-//        read_write_RTF ("/Users/and/Downloads/Verpackungsplan/RTF_in.rtf", "/Users/and/Downloads/Verpackungsplan/RTF_out.rtf");
-//    } catch (std::exception ex){
-//        std::printf(" ERROR of writing the out file \n");
-//    }

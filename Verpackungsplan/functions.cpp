@@ -7,9 +7,6 @@
 #include "functions.h"
 
 
-
-
-
 void write_RTF(const path & path_to, const ostringstream & ostring_out ){
     ofstream out_RTF{path_to.c_str()};
     if (!exists(path_to)) {
@@ -32,6 +29,14 @@ auto find_and_replace (const string & str_in, const char* reg_expr= "", const st
     regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
     return regex_replace(str_in, reg,  replacement );  //replacement
     
+}
+
+bool find_and_change( string &str_in , const char* pattern, const char* replacement) {
+    if (find_the_desired_string(str_in,pattern)) {
+        str_in = find_and_replace(str_in, pattern, replacement );
+        return true;
+    }
+    return false;
 }
 
 
@@ -83,20 +88,18 @@ auto substring_verpack_txt(const string & source, const char* reg_expr= "")-> de
     
     string str_in,str_temp;
     smatch result;
-
-    deque<size_t> data_vec;
+    deque<size_t> data;
+    
     regex reg{reg_expr,std::regex_constants::ECMAScript | std::regex_constants::icase};
-
         if (regex_search(str_in,result,reg)) {
             str_temp = result.str();
             str_in = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
             str_temp =result.suffix();
-            data_vec.emplace_back(std::stoi(str_temp) );
+            data.emplace_back(std::stoi(str_temp) );
         }
-
-    return data_vec;
-    
+    return data;
 }
+
 
 
 auto read_data_txt(const path & path_to, const char* reg_expr_1 = "", const char* reg_expr_2 = "" , const char* reg_expr_3 = "")-> multimap_data{
@@ -148,12 +151,11 @@ auto substring (const string & source, const char* reg_expr_1 = "" , const char*
     smatch result;
     string str_temp, str_suffix , str_suffix_2;
     size_t shrink=0;
-    float float_temp=0.070;
+    float float_temp{0.0};
    
     regex reg_1{reg_expr_1,std::regex_constants::ECMAScript | std::regex_constants::icase};
-    regex reg_2{reg_expr_2,std::regex_constants::ECMAScript | std::regex_constants::icase};
-    //regex reg_2{"[[:digit:]]+",std::regex_constants::ECMAScript | std::regex_constants::icase};
-    
+    regex reg_2{reg_expr_2,std::regex_constants::ECMAScript | std::regex_constants::icase}; // "[[:digit:]]+"
+      
 
     if (regex_search(source, result, reg_1)) {
         str_temp = result.str();
@@ -166,9 +168,8 @@ auto substring (const string & source, const char* reg_expr_1 = "" , const char*
         shrink= str_suffix.find('=');
        str_suffix.erase(shrink, str_suffix.length());
         
-        str_suffix_2 = str_suffix_2.substr(shrink); ///exeption
-        //str_suffix = source.    str_suffix_2;
-        
+        str_suffix_2 = str_suffix_2.substr(shrink); // exeption
+              
         get<2>(tuple_temp)= str_suffix;
 
         
@@ -184,16 +185,10 @@ auto substring (const string & source, const char* reg_expr_1 = "" , const char*
         return tuple_temp;
     }
     
-    //return pair<string, string>(str_temp,result.suffix());
-    return tup_element{0, float_temp, "substring does not exist"};  //stoi(result.suffix())
+   
+    return tup_element{0, float_temp, "substring does not exist"};  
     
 }
 
 
-bool find_and_change( string &str_in , const char* pattern, const char* replacement) {
-    if (find_the_desired_string(str_in,pattern)) {
-        str_in = find_and_replace(str_in, pattern, replacement );
-        return true;
-    }
-    return false;
-}
+

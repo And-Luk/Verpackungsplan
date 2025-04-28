@@ -21,5 +21,4 @@ public:
     elements_selection(vector_of_pair_size_t verpak_txt, multimap_data data_txt);
     ~elements_selection();
     void read_write_RTF(const path & path_in, const path & path_out);
-    void new_read_write_RTF(const path & path_in, const path & path_out);
 };
