@@ -105,8 +105,13 @@ void elements_selection::read_write_RTF( const path & path_in, const path & path
         
         
     }
-    // ending of the RTF file
-    ifstream in_END{"/Users/and/Downloads/Verpackungsplan/End_of.txt"};
+    // ending of the RTF file  End_of
+    const string current_path  { std::filesystem::current_path().string()};
+   string  in_END_s{current_path.data()};
+    in_END_s.append("/End_of.txt");
+    
+    ifstream in_END{in_END_s.c_str()};
+    
     for (;getline(in_END, str_in);) {
 
        

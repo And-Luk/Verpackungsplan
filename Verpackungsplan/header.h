@@ -18,6 +18,9 @@
 #include <sstream>
 #include <deque>
 #include <map>
+#include <stdio.h>
+
+
 
 using namespace std;
 using namespace filesystem;

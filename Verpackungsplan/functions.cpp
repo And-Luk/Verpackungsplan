@@ -62,7 +62,7 @@ auto read_verpack_txt(const path & path_to, const char* reg_expr_1 = "" , const 
             str_suffix =result.suffix();
             if (regex_search(str_suffix, result, reg_2)) {
                 str_temp =result.suffix();
-                //regex reg_3{"[[:digit:]]+",std::regex_constants::ECMAScript | std::regex_constants::icase};
+                
                 
                 if (regex_search(str_temp, result, reg_3)) {
                     //str_temp.clear();
