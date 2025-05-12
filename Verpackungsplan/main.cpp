@@ -8,16 +8,19 @@
 #include "elements_selection.h"
 namespace fs = std::filesystem;
 
-//const char * verpackungsplan_file   {"/Users/and/Downloads/Verpackungsplan/verpack.txt"};
-//const char * data_file      =           {"/Users/and/Downloads/Verpackungsplan/data.txt"};
-//const char* RTF_template_file        {"/Users/and/Downloads/Verpackungsplan/template.rtf"};
-//const char* RTF_out_file                {"/Users/and/Downloads/Verpackungsplan/OUT.rtf"};
+//const char * verpackungsplan_file   {"pwd ./verpack.txt"};
+//const char * data_file                      {"pwd ./data.txt"};
+//const char* RTF_template_file        {"pwd ./template.rtf"};
+//const char* RTF_out_file                {"pwd ./OUT.rtf"};
+//const char* RTF_END_in_file         {"pwd ./END_of.rtf"};
 
 const char * files [] {
-    "/verpack.txt",
-    "/data.txt",
-    "/template.rtf",
-    "/OUT.rtf"
+    "verpack.txt",
+    "data.txt",
+    "template.rtf",
+    "OUT.rtf",
+    "End_of.txt",
+    "/"
 };
 
 
@@ -27,23 +30,42 @@ int main(int argc, const char * argv[]) {
     const string current_path  { fs::current_path().string()};
     
     string  verpackungsplan_file_s{current_path.data()};
+    verpackungsplan_file_s.append(files[5]);
     verpackungsplan_file_s.append(files[0]);
     const char * verpackungsplan_file {  verpackungsplan_file_s.c_str() } ;
 
     string  data_file_s{current_path.data()};
+    data_file_s.append(files[5]);
     data_file_s.append(files[1]);
     const char * data_file {  data_file_s.c_str() } ;
    
     string  RTF_template_file_s{current_path.data()};
+    RTF_template_file_s.append(files[5]);
     RTF_template_file_s.append(files[2]);
     const char * RTF_template_file {  RTF_template_file_s.c_str() } ;
     
     string  RTF_out_file_s{current_path.data()};
+    RTF_out_file_s.append(files[5]);
     RTF_out_file_s.append(files[3]);
     const char * RTF_out_file {  RTF_out_file_s.c_str() } ;
     
-  
+    
+    string  RTF_END_in_s{current_path.data()};
+    RTF_END_in_s.append(files[5]);
+    RTF_END_in_s.append(files[4]);
+    const char * RTF_END_in_file {  RTF_END_in_s.c_str() } ;
+    
 
+    
+    
+    
+//    "\033[31m"
+//    "\033[32m"
+//    "\033[33m"
+//    "\033[34m"
+//    "\033[35m"
+//    "\033[36m"
+//    const std: string reset {"\033[0m"};
     
     
    
@@ -77,13 +99,13 @@ int main(int argc, const char * argv[]) {
         
         
         elements_selection dumpf{verpak, data};
-        dumpf.read_write_RTF(RTF_template_file, RTF_out_file);
+        dumpf.read_write_RTF(RTF_template_file, RTF_out_file, RTF_END_in_file);
     } catch (exception ex) {
         std::printf("\n something didn't go as planned!\n") ;
         return 1;
     }
 
-        
+    cout<<"\033[32m"<<endl;
     std::printf("\n OK!\n") ;
     return 0;
 }

@@ -30,7 +30,7 @@ elements_selection::~elements_selection(){}
 
 elements_selection::elements_selection():internal_data{}{}
 
-void elements_selection::read_write_RTF( const path & path_in, const path & path_out){
+void elements_selection::read_write_RTF( const path & path_in, const path & path_out, const path & path_END_of_RTF){
     
     ifstream in_RTF{path_in.c_str()};
     smatch result;
@@ -105,18 +105,15 @@ void elements_selection::read_write_RTF( const path & path_in, const path & path
         
         
     }
-    // ending of the RTF file  End_of
-    const string current_path  { std::filesystem::current_path().string()};
-   string  in_END_s{current_path.data()};
-    in_END_s.append("/End_of.txt");
+ // ending of the RTF file  End_of
+//    const string current_path  { std::filesystem::current_path().string()};
+//   string  in_END_s{current_path.data()};
+//    in_END_s.append("/End_of.txt");
     
-    ifstream in_END{in_END_s.c_str()};
+    ifstream in_END{path_END_of_RTF.c_str()};
     
     for (;getline(in_END, str_in);) {
-
-       
-             ostring_out<<str_in;
-
+        ostring_out<<str_in;
         ostring_out<<str_in<<std::endl;
     }
     write_RTF(path_out, ostring_out);
