@@ -28,3 +28,4 @@ auto substring_verpack_txt(const string & , const char*)-> deque<size_t>;
 auto read_data_txt(const path & , const char* reg_expr_1  , const char* reg_expr_2, const char* reg_expr_3)-> multimap_data;
 auto substring (const string & source, const char* reg_expr_1  , const char* reg_expr_2  )-> tup_element;
 
+void umlauts (vector<pair<size_t, std::tuple<size_t, int, string >>> & internal_data );

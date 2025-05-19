@@ -191,4 +191,36 @@ auto substring (const string & source, const char* reg_expr_1 = "" , const char*
 }
 
 
+void umlauts (vector<pair<size_t, std::tuple<size_t, int, string >>> & internal_data ){
 
+    for (auto & element : internal_data) {
+        string str;
+        stringstream strout;
+
+        str = {};
+        str = get<2>(element.second);
+        for(std::string::iterator it = str.begin(); it != str.end(); ++it) {
+            
+            if ((*it)=='\xc3') {  continue;  }
+            
+            switch ((*it)) {
+                case '\x84':  strout<<"\\uc1\\u196\\0";  continue;      //  Ä
+                case '\x96':  strout<<"\\uc1\\u214\\0";   continue;     //  Ö
+                case '\x9c':  strout<<"\\uc1\\u220\\0";   continue;     //  Ü
+                
+                case '\xa4':  strout<<"\\uc1\\u228\\0";   continue;      // ä
+                case '\xb6':  strout<<"\\uc1\\u246\\0";   continue;     //  ö
+                case '\xbc':  strout<<"\\uc1\\u252\\0";  continue;      //  ü
+                
+                case '\x9f':  strout<<"\\uc1\\u223\\0";   continue;     //  ß
+                
+                default:    strout<<*it;    continue;
+            }
+        }
+        get<2>(element.second)=strout.str();
+        strout.str("");
+
+
+    }
+    
+}

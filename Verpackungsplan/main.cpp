@@ -8,11 +8,27 @@
 #include "elements_selection.h"
 namespace fs = std::filesystem;
 
-//const char * verpackungsplan_file   {"pwd ./verpack.txt"};
-//const char * data_file                      {"pwd ./data.txt"};
-//const char* RTF_template_file        {"pwd ./template.rtf"};
-//const char* RTF_out_file                {"pwd ./OUT.rtf"};
+//#include <chrono>
+//#include <ctime>
+
+//namespace chrono = std::chrono;
+//using namespace std::chrono_literals;
+
+
+//const char * verpackungsplan_file   {"pwd ./verpack.txt"};    "C:\\Users\\lager\\Documents\\And\\Verpackungsplan\\verpack.txt"
+//const char * data_file                      {"pwd ./data.txt"};           "C:\\Users\\lager\\Documents\\And\\Verpackungsplan\\data.txt"
+//const char* RTF_template_file        {"pwd ./template.rtf"};     "C:\\Users\\lager\\Documents\\And\\Verpackungsplan\\RTF_in.rtf"
+//const char* RTF_out_file                {"pwd ./OUT.rtf"};            "C:\\Users\\lager\\Documents\\And\\Verpackungsplan\\RTF_out.rtf"
 //const char* RTF_END_in_file         {"pwd ./END_of.rtf"};
+
+//const char * parameter_names [] {
+//    "verpackungsplan_file",
+//    "data_file",
+//    "RTF_template_file",
+//    "RTF_out_file",
+//    "RTF_END_in_file"
+//};
+
 
 const char * files [] {
     "verpack.txt",
@@ -23,6 +39,14 @@ const char * files [] {
     "/"
 };
 
+//template <typename Clock, typename Duration>
+//std::ostream& operator << ( std::ostream& outs, const std::chrono::time_point <Clock, Duration> & dt )
+//{
+//  char s[200];
+//  auto t = Clock::to_time_t( dt );
+//  std::strftime( s, sizeof(s), "%c", std::localtime( &t ) );
+//  return outs << s;
+//}
 
 
 int main(int argc, const char * argv[]) {
@@ -56,7 +80,36 @@ int main(int argc, const char * argv[]) {
     const char * RTF_END_in_file {  RTF_END_in_s.c_str() } ;
     
 
+
+
+
+
+
+
+
+//  std::chrono::time_point today = std::chrono::system_clock::now();
+//  std::cout << "Today is " << today.time_since_epoch() << "\n";
     
+    
+    std::time_t rawtime;
+    std::tm* timeinfo;
+    char buffer [80];
+
+    std::time(&rawtime);
+    timeinfo = std::localtime(&rawtime);
+
+    std::strftime(buffer,80,"%d-%m-%Y    %H:%M:%S",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
+    
+    std::printf("%s",buffer);
+    //std::puts(buffer);
+    
+    
+//  auto tomorrow = today + 24h;
+//  std::cout << "Tomorrow is " << tomorrow << "\n";
+//  
+//  auto day_after = today + 24h * 2;
+//  std::cout << "The day after that is " << day_after << "\n";
+
     
     
 //    "\033[31m"
