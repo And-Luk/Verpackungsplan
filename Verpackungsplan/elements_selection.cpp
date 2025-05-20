@@ -4,10 +4,7 @@
 //
 //  Created by Andrei Lukashevich on 19-04-2025.
 //
-
 #include "elements_selection.h"
-
-
 
 elements_selection::elements_selection(vector_of_pair_size_t verpak, multimap_data data){
     for (auto & ID_OP : verpak) {
@@ -39,34 +36,24 @@ void elements_selection::read_write_RTF( const path & path_in, const path & path
     string str_in,  title , amount_str, article_next;
     size_t article = 0, article_old = 0,   material = 0,  count =0, repeat_article = 0;
     float amount = 0 ;
-    static size_t it_1 =0;
+    static bool once {false};
     
     for (auto & ID_OP : internal_data) {
         
-        if (it_1==0) {
-            
+        if (!once) {
             std::time_t rawtime;
             std::tm* timeinfo;
             char buffer [80];
-
             std::time(&rawtime);
             timeinfo = std::localtime(&rawtime);
-
-            std::strftime(buffer,80,"%d-%m-%Y    %H:%M:%S",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
-            
-           // std::printf("%s",buffer);
-     
+            std::strftime(buffer,80,"%d-%m-%Y    %T",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
             getline(in_RTF, str_in);
-            //n/data#
-
-                while (  ! find_and_change(str_in, "n/data#", buffer) ){
+                while (  ! find_and_change(str_in, "n/data#", buffer) ){        //n/data#
                     ostring_out<<str_in<<std::endl;
                     getline(in_RTF, str_in);
-
                 }
             ostring_out<<str_in<<std::endl;
-
-            it_1++;
+            once=true;
         }
 
         temp_element = ID_OP.second;
@@ -77,9 +64,7 @@ void elements_selection::read_write_RTF( const path & path_in, const path & path
         if (amount ==0 && material != 0) {
             amount_str="    1 Rolle";
         }else amount_str = to_string((int)amount).c_str();
-        
         title =  get<2>(temp_element);
-        
         if ( repeat_article == 0  &&  count ==0 ) {
             article_old = article;
         }
@@ -130,17 +115,14 @@ void elements_selection::read_write_RTF( const path & path_in, const path & path
             count = 1;
             ostring_out<<str_in<<std::endl;
         }
-        
-        
+
     }
- // ending of the RTF file  End_of
+    // ending of the RTF file  End_of
     ifstream in_END{path_END_of_RTF.c_str()};
-    
     for (;getline(in_END, str_in);) {
         ostring_out<<str_in;
         ostring_out<<str_in<<std::endl;
     }
     write_RTF(path_out, ostring_out);
 }
-
 

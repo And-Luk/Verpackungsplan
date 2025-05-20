@@ -40,19 +40,16 @@ bool find_and_change( string &str_in , const char* pattern, const char* replacem
 }
 
 
-
 auto read_verpack_txt(const path & path_to, const char* reg_expr_1 = "" , const char* reg_expr_2 = "", const char* reg_expr_3= "")-> vector_of_pair_size_t{
     ifstream ifstrm{path_to.c_str()};
     vector_of_pair_size_t data;
-    
     string str_in, str_temp, str_suffix;
     smatch result;
     pair<size_t, size_t> temp_pair;
     regex reg_1{reg_expr_1,std::regex_constants::ECMAScript | std::regex_constants::icase};
     regex reg_2{reg_expr_2,std::regex_constants::ECMAScript | std::regex_constants::icase};
     regex reg_3{reg_expr_3,std::regex_constants::ECMAScript | std::regex_constants::icase};
-   
-    
+
     for (;getline(ifstrm, str_in);) {
         if (regex_search(str_in, result, reg_1)) {
             str_temp = result.str();
@@ -62,8 +59,7 @@ auto read_verpack_txt(const path & path_to, const char* reg_expr_1 = "" , const 
             str_suffix =result.suffix();
             if (regex_search(str_suffix, result, reg_2)) {
                 str_temp =result.suffix();
-                
-                
+
                 if (regex_search(str_temp, result, reg_3)) {
                     //str_temp.clear();
                     str_temp = result.str();
@@ -77,8 +73,7 @@ auto read_verpack_txt(const path & path_to, const char* reg_expr_1 = "" , const 
                 data.emplace_back(temp_pair);
                 continue;
         }
-            
-            
+
     }
 
     return data;
@@ -100,16 +95,13 @@ auto substring_verpack_txt(const string & source, const char* reg_expr= "")-> de
     return data;
 }
 
-
-
 auto read_data_txt(const path & path_to, const char* reg_expr_1 = "", const char* reg_expr_2 = "" , const char* reg_expr_3 = "")-> multimap_data{
     ifstream ifstrm{path_to.c_str()};
-    string str_all,str_temp, str_old;  //str_old{"0"}
+    string str_all,str_temp, str_old;
     smatch result;
-    //pair<string, string> pair_temp;
     tup_element tuple_temp;
-
     multimap_data data;
+    
     for (;getline(ifstrm, str_all);) {
         regex reg{reg_expr_1, std::regex_constants::ECMAScript | std::regex_constants::icase};
         if (regex_search(str_all,result,reg)) {
@@ -119,27 +111,16 @@ auto read_data_txt(const path & path_to, const char* reg_expr_1 = "", const char
             
             if (str_temp[0]=='9' ) {
                 str_old = str_temp;
-                
-                
                 tuple_temp = substring(result.suffix(), reg_expr_2 , reg_expr_3);
-               
                 data.insert( {(size_t)stoi(str_old), tuple_temp} );
                 continue;
             }
             
             if (str_temp[0]=='5' ) {
-                
                 tuple_temp = substring(str_all, reg_expr_2 , reg_expr_3);
-                
-                
                 get<0>(tuple_temp)= stoi(str_temp);
-                //get<1>(tuple_temp)= 0.08;
-                //get<2>(tuple_temp)= result.suffix(); //pair_temp.second;
                 data.insert({(size_t)stoi(str_old), tuple_temp});
             }
-            
-            
-            
         }
     }
     return data;
@@ -167,36 +148,26 @@ auto substring (const string & source, const char* reg_expr_1 = "" , const char*
         
         shrink= str_suffix.find('=');
        str_suffix.erase(shrink, str_suffix.length());
-        
-        str_suffix_2 = str_suffix_2.substr(shrink); // exeption
-              
-        get<2>(tuple_temp)= str_suffix;
+       str_suffix_2 = str_suffix_2.substr(shrink); // exeption
+       get<2>(tuple_temp)= str_suffix;
 
-        
         if (regex_search( str_suffix_2, result, reg_2)) {
-            
             str_temp = result.str();
             float_temp = (float)std::stof( str_temp);
             get<1>(tuple_temp)= float_temp;
-
         }else  get<1>(tuple_temp)=1;
-        
-        
+
         return tuple_temp;
     }
-    
-   
+
     return tup_element{0, float_temp, "substring does not exist"};  
-    
 }
 
 
 void umlauts (vector<pair<size_t, std::tuple<size_t, int, string >>> & internal_data ){
-
+    string str;
+    stringstream strout;
     for (auto & element : internal_data) {
-        string str;
-        stringstream strout;
-
         str = {};
         str = get<2>(element.second);
         for(std::string::iterator it = str.begin(); it != str.end(); ++it) {
@@ -207,20 +178,14 @@ void umlauts (vector<pair<size_t, std::tuple<size_t, int, string >>> & internal_
                 case '\x84':  strout<<"\\uc1\\u196\\0";  continue;      //  Ä
                 case '\x96':  strout<<"\\uc1\\u214\\0";   continue;     //  Ö
                 case '\x9c':  strout<<"\\uc1\\u220\\0";   continue;     //  Ü
-                
                 case '\xa4':  strout<<"\\uc1\\u228\\0";   continue;      // ä
                 case '\xb6':  strout<<"\\uc1\\u246\\0";   continue;     //  ö
                 case '\xbc':  strout<<"\\uc1\\u252\\0";  continue;      //  ü
-                
                 case '\x9f':  strout<<"\\uc1\\u223\\0";   continue;     //  ß
-                
                 default:    strout<<*it;    continue;
             }
         }
         get<2>(element.second)=strout.str();
         strout.str("");
-
-
     }
-    
 }
