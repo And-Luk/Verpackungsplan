@@ -160,6 +160,8 @@ int main(int argc, const char * argv[]) {
 
     cout<<"\033[32m"<<endl;
     std::printf("\n OK!\n") ;
+ 
+    system("open ~/../../Applications/Pages.app '/Users/and/Downloads/Verpackungsplan/OUT.rtf'");
     return 0;
 }
 
