@@ -52,6 +52,7 @@ const char * files [] {
 int main(int argc, const char * argv[]) {
     
     const string current_path  { fs::current_path().string()};
+
     
     string  verpackungsplan_file_s{current_path.data()};
     verpackungsplan_file_s.append(files[5]);
@@ -79,6 +80,10 @@ int main(int argc, const char * argv[]) {
     RTF_END_in_s.append(files[4]);
     const char * RTF_END_in_file {  RTF_END_in_s.c_str() } ;
     
+    
+    string system_call {"open ~/../../Applications/Pages.app '"};
+    system_call.append(RTF_out_file);
+    system_call.append("'");
 
 
 
@@ -92,14 +97,14 @@ int main(int argc, const char * argv[]) {
     
     
     std::time_t rawtime;
+    
     std::tm* timeinfo;
     char buffer [80];
 
     std::time(&rawtime);
     timeinfo = std::localtime(&rawtime);
-
     std::strftime(buffer,80,"%d-%m-%Y    %T",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
-    
+    cout<<"\033[31m"<<endl;
     std::printf("%s",buffer);
     //std::puts(buffer);
     
@@ -112,11 +117,11 @@ int main(int argc, const char * argv[]) {
 
     
     
-//    "\033[31m"
-//    "\033[32m"
-//    "\033[33m"
-//    "\033[34m"
-//    "\033[35m"
+//    "\033[31m"   rot
+//    "\033[32m"  green
+//    "\033[33m" light green
+//    "\033[34m"  pourpur
+//    "\033[35m"  lila
 //    "\033[36m"
 //    const std: string reset {"\033[0m"};
     
@@ -158,10 +163,44 @@ int main(int argc, const char * argv[]) {
         return 1;
     }
 
+
+
+    //std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    //std::this_thread::sleep_for(std::chrono::seconds(10));
+    cout<<"\033[34m"<<endl;
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    
+    //std::printf("\n OK!\n") ;
+    for (auto &item : buffer) {
+        item=' ';
+    }
+      
+    std::time(&rawtime);
+    timeinfo = std::localtime(&rawtime);
+    std::strftime(buffer, 80,"%T",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
+    std::printf("%s",buffer);
+    
+    
+    
+    cout<<"\033[35m"<<endl;
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    
+    for (auto &item : buffer) {
+        item=' ';
+    }
+    std::time(&rawtime);
+    timeinfo = std::localtime(&rawtime);
+    std::strftime(buffer, 80,"%H:%M:%S",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
+    std::printf("%s",buffer);
+        
+    system(system_call.c_str());
+    
+
+    
+    
     cout<<"\033[32m"<<endl;
     std::printf("\n OK!\n") ;
- 
-    system("open ~/../../Applications/Pages.app '/Users/and/Downloads/Verpackungsplan/OUT.rtf'");
+    cout<<"\033[0m"<<endl;
     return 0;
 }
 
