@@ -153,6 +153,7 @@ auto substring (const string & source, const char* reg_expr_1 = "" , const char*
 
         if (regex_search( str_suffix_2, result, reg_2)) {
             str_temp = result.str();
+            std::replace(str_temp.begin(), str_temp.end(), ',', '.');
             float_temp = (float)std::stof( str_temp);
             get<1>(tuple_temp)= float_temp;
         }else  get<1>(tuple_temp)=1;

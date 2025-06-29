@@ -31,8 +31,8 @@ namespace fs = std::filesystem;
 
 
 const char * files [] {
-    "verpack.txt",
-    "data.txt",
+    "Plan.txt",
+    "Data.txt",
     "template.rtf",
     "OUT.rtf",
     "End_of.txt",
@@ -103,7 +103,7 @@ int main(int argc, const char * argv[]) {
 
     std::time(&rawtime);
     timeinfo = std::localtime(&rawtime);
-    std::strftime(buffer,80,"%d-%m-%Y    %T",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
+    std::strftime(buffer,80,"%d-%m-%Y    %H:%M:%S",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
     cout<<"\033[31m"<<endl;
     std::printf("%s",buffer);
     //std::puts(buffer);
@@ -153,7 +153,7 @@ int main(int argc, const char * argv[]) {
             read_data_txt( data_file,
                                "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\"|[[:space:]])*" ,
                                "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*",
-                               "([0-9]*[.])?[0-9]+" ) };
+                               "([0-9]+(\\.|\\,)+)?[0-9]+" ) };
         
         
         elements_selection dumpf{verpak, data};
@@ -168,7 +168,7 @@ int main(int argc, const char * argv[]) {
     //std::this_thread::sleep_for(std::chrono::milliseconds(10));
     //std::this_thread::sleep_for(std::chrono::seconds(10));
     cout<<"\033[34m"<<endl;
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     
     //std::printf("\n OK!\n") ;
     for (auto &item : buffer) {
@@ -177,13 +177,13 @@ int main(int argc, const char * argv[]) {
       
     std::time(&rawtime);
     timeinfo = std::localtime(&rawtime);
-    std::strftime(buffer, 80,"%T",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
+    std::strftime(buffer, 80,"%H:%M:%S",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
     std::printf("%s",buffer);
     
     
     
     cout<<"\033[35m"<<endl;
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     
     for (auto &item : buffer) {
         item=' ';
