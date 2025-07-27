@@ -22,7 +22,7 @@ elements_selection::elements_selection(vector_of_pair_size_t verpak, multimap_da
         }
     }
     umlauts(internal_data);
-
+    how_much_items();
 }
 
 elements_selection::~elements_selection(){}
@@ -126,3 +126,16 @@ void elements_selection::read_write_RTF( const path & path_in, const path & path
     write_RTF(path_out, ostring_out);
 }
 
+void elements_selection::how_much_items (){
+    for (auto & folie : internal_data) {
+        auto folie_num = get<0>(folie.second);
+        auto how_much = (size_t)get<1>(folie.second);
+        set_of_items[folie_num].first++;
+        set_of_items[folie_num].second+=how_much;
+    }
+    std::cout << std::endl;
+    for (auto & el : set_of_items) {
+        std::cout << el.first << " => " << el.second.first<< " = "<< el.second.second << std::endl;
+    }
+    std::cout << std::endl;
+}

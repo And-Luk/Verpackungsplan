@@ -107,7 +107,7 @@ auto read_data_txt(const path & path_to, const char* reg_expr_1 = "", const char
         if (regex_search(str_all,result,reg)) {
             str_temp = result.str();
             str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-            get<1>(tuple_temp)= 0.07;
+            get<1>(tuple_temp)= 0;  // ???
             
             if (str_temp[0]=='9' ) {
                 str_old = str_temp;

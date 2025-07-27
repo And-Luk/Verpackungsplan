@@ -7,27 +7,9 @@
 #include "functions.h"
 #include "elements_selection.h"
 namespace fs = std::filesystem;
-
-//#include <chrono>
-//#include <ctime>
-
-//namespace chrono = std::chrono;
-//using namespace std::chrono_literals;
+#include <sys/stat.h>
 
 
-//const char * verpackungsplan_file   {"pwd ./verpack.txt"};    "C:\\Users\\lager\\Documents\\And\\Verpackungsplan\\verpack.txt"
-//const char * data_file                      {"pwd ./data.txt"};           "C:\\Users\\lager\\Documents\\And\\Verpackungsplan\\data.txt"
-//const char* RTF_template_file        {"pwd ./template.rtf"};     "C:\\Users\\lager\\Documents\\And\\Verpackungsplan\\RTF_in.rtf"
-//const char* RTF_out_file                {"pwd ./OUT.rtf"};            "C:\\Users\\lager\\Documents\\And\\Verpackungsplan\\RTF_out.rtf"
-//const char* RTF_END_in_file         {"pwd ./END_of.rtf"};
-
-//const char * parameter_names [] {
-//    "verpackungsplan_file",
-//    "data_file",
-//    "RTF_template_file",
-//    "RTF_out_file",
-//    "RTF_END_in_file"
-//};
 
 
 const char * files [] {
@@ -38,15 +20,6 @@ const char * files [] {
     "End_of.txt",
     "/"
 };
-
-//template <typename Clock, typename Duration>
-//std::ostream& operator << ( std::ostream& outs, const std::chrono::time_point <Clock, Duration> & dt )
-//{
-//  char s[200];
-//  auto t = Clock::to_time_t( dt );
-//  std::strftime( s, sizeof(s), "%c", std::localtime( &t ) );
-//  return outs << s;
-//}
 
 
 int main(int argc, const char * argv[]) {
@@ -86,14 +59,6 @@ int main(int argc, const char * argv[]) {
     system_call.append("'");
 
 
-
-
-
-
-
-
-//  std::chrono::time_point today = std::chrono::system_clock::now();
-//  std::cout << "Today is " << today.time_since_epoch() << "\n";
     
     
     std::time_t rawtime;
@@ -129,14 +94,30 @@ int main(int argc, const char * argv[]) {
    
     
     try {
-
-        
             const std::filesystem::path dir{verpackungsplan_file};
             if (!exists(dir)) {
                 std::printf("Can'n open the verpack.txt file.\n\n");
                 return 1;
             }
-
+        
+//        auto tmp1 = fs::path{dir};
+//        std::cout<<endl;
+//        std::printf("%s", tmp1.c_str()   )   ;
+//        std::cout<<endl;
+        
+        struct stat fileInfo;
+        stat(verpackungsplan_file_s.c_str(), &fileInfo);
+        unsigned long fileSize =  fileInfo.st_size;
+        string file_Info_string{to_string (fileSize)};
+       
+        fileSize = fileInfo.st_ino;
+        file_Info_string.append(to_string (fileSize));
+        
+        fileSize = fileInfo.st_mtimespec.tv_nsec;
+        file_Info_string.append(to_string (fileSize));
+        
+        std::printf("Size of a last modefied = %s", file_Info_string.c_str() )   ;
+        std::cout<<endl;
            
         } catch (std::exception ex){
             std::printf(" an error.\n\n");
@@ -192,8 +173,10 @@ int main(int argc, const char * argv[]) {
     timeinfo = std::localtime(&rawtime);
     std::strftime(buffer, 80,"%H:%M:%S",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
     std::printf("%s",buffer);
-        
-    system(system_call.c_str());
+    
+    
+    //temp
+    //system(system_call.c_str());
     
 
     
