@@ -126,6 +126,7 @@ void elements_selection::read_write_RTF( const path & path_in, const path & path
     write_RTF(path_out, ostring_out);
 }
 
+
 void elements_selection::how_much_items (){
     for (auto & folie : internal_data) {
         auto folie_num = get<0>(folie.second);
@@ -133,6 +134,19 @@ void elements_selection::how_much_items (){
         set_of_items[folie_num].first++;
         set_of_items[folie_num].second+=how_much;
     }
+    
+    for (auto it = set_of_items.begin(); it!=set_of_items.end(); ) {
+        if (it->second.first<2) {
+            it = set_of_items.erase(it);
+            continue;
+        }
+        it++;
+    }
+    
+    
+
+    
+    
     std::cout << std::endl;
     for (auto & el : set_of_items) {
         std::cout << el.first << " => " << el.second.first<< " = "<< el.second.second << std::endl;
