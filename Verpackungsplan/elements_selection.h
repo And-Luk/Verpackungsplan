@@ -12,10 +12,15 @@
 
 class elements_selection {
 
-    vector<pair<size_t, std::tuple<size_t, int, string >>> internal_data;
+    std::vector<pair<size_t, std::tuple<size_t, int, string >>> internal_data;
     std::tuple<size_t, float, string > temp_element;
-    ostringstream ostring_out;
-    std::map<size_t, pair<size_t, size_t>> set_of_items;
+    std::ostringstream ostring_out;
+    std::map<size_t, tuple<size_t, size_t, size_t>> set_of_items;
+    
+    typedef std::map<size_t, pair<size_t, size_t>>::key_type     set_of_items_key_type;
+    
+    std::map<size_t, tuple<size_t, size_t, size_t>>::iterator iter_set = set_of_items.begin();
+    std::vector<pair<size_t, std::tuple<size_t, string, string>>> internal_data_2;
     
     
 public:

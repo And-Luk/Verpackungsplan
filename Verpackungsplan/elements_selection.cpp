@@ -128,28 +128,82 @@ void elements_selection::read_write_RTF( const path & path_in, const path & path
 
 
 void elements_selection::how_much_items (){
-    for (auto & folie : internal_data) {
-        auto folie_num = get<0>(folie.second);
-        auto how_much = (size_t)get<1>(folie.second);
-        set_of_items[folie_num].first++;
-        set_of_items[folie_num].second+=how_much;
+    for (auto & item : internal_data) {
+        auto item_num = get<0>(item.second);
+        auto how_much = (size_t)get<1>(item.second);
+        //auto amount =
+        //std::map<size_t, tuple<size_t, size_t, size_t>> set_of_items;
+        
+        std::get<0>(set_of_items[item_num])++;  // huw much elennts of internal_data
+        std::get<1>(set_of_items[item_num])+=how_much;
+        //set_of_items[item_num].first++;
+        if (how_much==0) {
+            std::get<2>(set_of_items[item_num])++;
+        }
     }
     
     for (auto it = set_of_items.begin(); it!=set_of_items.end(); ) {
-        if (it->second.first<2) {
+        if (std::get<0>(it->second )<2) {
             it = set_of_items.erase(it);
             continue;
         }
         it++;
     }
+   
+    std::cout << std::endl;
+    for (auto & el : set_of_items) {
+        std::cout << el.first << " => " << std::get<0>(el.second)<< " = "<< std::get<1>(el.second) << " =R=> " << std::get<2>(el.second)<< std::endl;
+    }
+    std::cout << std::endl;
+    
+//___________________________________________________________________
+    
+    for (auto & it : internal_data) {
+        pair<size_t, std::tuple<size_t, string, string >> element ;
+        
+        element.first = it.first;
+        get<0>( element.second ) = std::get<0>(it.second);
+        get<2>( element.second ) = std::get<2>(it.second);
+        
+        size_t elements_count =std::get<1>(it.second);
+        if (elements_count ==0) {
+                get<1>(element.second) = "1 Rolle";
+            } else {
+                get<1>(element.second) = std::to_string(elements_count);
+            }
+        
+        
+
+        
+        iter_set = set_of_items.find( std::get<0>( it.second));
+        
+        if (  iter_set != set_of_items.end() ) {
+            get<1>(element.second).append(" (");
+            //std::map<size_t, tuple<size_t, size_t, size_t>> set_of_items;
+            
+            get<1>(element.second).append( std::to_string( std::get<1>( iter_set->second ) ) );
+            if (std::get<2>( iter_set->second ) > 0) {
+                get<1>(element.second).append("+" );
+            }
+            
+            
+            get<1>(element.second).append(")");
+            set_of_items.erase(iter_set);
+            internal_data_2.push_back(element);
+            continue;
+        }
+        internal_data_2.push_back(element);
+    }
     
     
+    
+    std::cout << std::endl;
+    for (auto & it : internal_data_2) {
+        std::cout<< it.first << " =>> "  <<get<0>(it.second)  << " => " << get<1>(it.second)<< " = "<< get<2>(it.second) << std::endl;
+    }
+    std::cout << std::endl;
 
     
     
-    std::cout << std::endl;
-    for (auto & el : set_of_items) {
-        std::cout << el.first << " => " << el.second.first<< " = "<< el.second.second << std::endl;
-    }
-    std::cout << std::endl;
+
 }
