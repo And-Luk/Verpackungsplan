@@ -13,14 +13,19 @@
 class elements_selection {
 
     std::vector<pair<size_t, std::tuple<size_t, int, string >>> internal_data;
-    std::tuple<size_t, float, string > temp_element;
-    std::ostringstream ostring_out;
+    std::vector<pair<size_t, std::tuple<size_t, string, string>>> internal_data_2;
     std::map<size_t, tuple<size_t, size_t, size_t>> set_of_items;
+    
+    std::tuple<size_t, float, string > temp_element;
+    std::tuple<size_t, string, string > temp_element_2;
+    
+    std::ostringstream ostring_out;
+    
     
     typedef std::map<size_t, pair<size_t, size_t>>::key_type     set_of_items_key_type;
     
     std::map<size_t, tuple<size_t, size_t, size_t>>::iterator iter_set = set_of_items.begin();
-    std::vector<pair<size_t, std::tuple<size_t, string, string>>> internal_data_2;
+    
     
     
 public:
@@ -29,4 +34,6 @@ public:
     ~elements_selection();
     void read_write_RTF(const path & path_in, const path & path_out, const path & path_End_of_RTF);
     void how_much_items ();
+    void read_write_RTF_2(const path & path_in, const path & path_out, const path & path_End_of_RTF);
+    
 };
