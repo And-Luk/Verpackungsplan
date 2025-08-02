@@ -196,7 +196,7 @@ void elements_selection::read_write_RTF_2(const path & path_in, const path & pat
     ifstream in_RTF{path_in.c_str()};
     smatch result;
     string str_in,  title , amount_str, article_next;
-    size_t article = 0, article_old = 0,   material = 0,  count =0;
+    size_t article = 0, article_old = 0,   material = 0,  count =0, repeat_article = 0 ;
    
     static bool once {false};
     
@@ -224,9 +224,13 @@ void elements_selection::read_write_RTF_2(const path & path_in, const path & pat
         material = get<0>(temp_element_2);
         amount_str =  get<1>(temp_element_2);
         title =  get<2>(temp_element_2);
+        if ( repeat_article == 0  &&  count ==0 ) {
+            article_old = article;
+        }
 
         
         if (count ==1 &&  article == article_old) {
+            repeat_article = 1;
             article_next ="";
         }
 
@@ -247,6 +251,7 @@ void elements_selection::read_write_RTF_2(const path & path_in, const path & pat
             }
             
             ostring_out<<str_in<<std::endl;
+            repeat_article = 0;
             count = 0;
             article_old = article;
             }
@@ -266,6 +271,7 @@ void elements_selection::read_write_RTF_2(const path & path_in, const path & pat
                     getline(in_RTF, str_in);
                 }
             }
+            repeat_article = 1;
             count = 1;
             ostring_out<<str_in<<std::endl;
         }
