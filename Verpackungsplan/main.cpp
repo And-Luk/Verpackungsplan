@@ -138,8 +138,8 @@ int main(int argc, const char * argv[]) {
         
         
         elements_selection dumpf{verpak, data};
-        //dumpf.read_write_RTF(RTF_template_file, RTF_out_file, RTF_END_in_file);
-        dumpf.read_write_RTF_2(RTF_template_file, RTF_out_file, RTF_END_in_file);
+        
+        dumpf.read_write_RTF(RTF_template_file, RTF_out_file, RTF_END_in_file);
     } catch (exception ex) {
         std::printf("\n something didn't go as planned!\n") ;
         return 1;

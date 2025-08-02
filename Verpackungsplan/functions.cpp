@@ -55,7 +55,7 @@ auto read_verpack_txt(const path & path_to, const char* reg_expr_1 = "" , const 
             str_temp = result.str();
             str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
             temp_pair.first = std::stoi( str_temp);
-            temp_pair.second = 1;
+            temp_pair.second = 1;           //1
             str_suffix =result.suffix();
             if (regex_search(str_suffix, result, reg_2)) {
                 str_temp =result.suffix();
@@ -69,7 +69,7 @@ auto read_verpack_txt(const path & path_to, const char* reg_expr_1 = "" , const 
                     continue;
                     }
             }
-                temp_pair.second = 1;
+                temp_pair.second = 1;       //1
                 data.emplace_back(temp_pair);
                 continue;
         }

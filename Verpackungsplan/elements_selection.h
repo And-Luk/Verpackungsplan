@@ -31,9 +31,10 @@ class elements_selection {
 public:
     elements_selection();
     elements_selection(vector_of_pair_size_t verpak_txt, multimap_data data_txt);
+    
     ~elements_selection();
+    
+    void how_much_items ();     //      ==>     internal_data_2.push_back(element);
     void read_write_RTF(const path & path_in, const path & path_out, const path & path_End_of_RTF);
-    void how_much_items ();
-    void read_write_RTF_2(const path & path_in, const path & path_out, const path & path_End_of_RTF);
     
 };
