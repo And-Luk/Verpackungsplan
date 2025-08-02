@@ -73,7 +73,6 @@ auto read_verpack_txt(const path & path_to, const char* reg_expr_1 = "" , const 
                 data.emplace_back(temp_pair);
                 continue;
         }
-
     }
 
     return data;

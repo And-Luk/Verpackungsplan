@@ -11,14 +11,17 @@ elements_selection::elements_selection(vector_of_pair_size_t verpak, multimap_da
         if (data.count(ID_OP.first)==0) {
             temp_element = make_tuple(size_t{0}, float{0.0}, string{"   ------- ? ? ? -------  "});
             //In der data.txt ist kein solches Element vorhanden.
-            internal_data.insert(internal_data.end(), { ID_OP.first , temp_element  } );
+            //internal_data.insert(internal_data.end(), { ID_OP.first , temp_element  } );
+            internal_data.push_back( { ID_OP.first , temp_element  } );
             continue;
         }
         
         for (auto it =  data.lower_bound(ID_OP.first) ; it != data.upper_bound(ID_OP.first); ++it) {
-            temp_element = (it)->second;
-            get<1>(temp_element) =(int) ( ID_OP.second * get<1>((it)->second));
-            internal_data.insert(internal_data.end(),{ID_OP.first , temp_element});
+            temp_element = it->second;
+            
+            get<1>(temp_element) = get<1>(it->second) * ID_OP.second; // temp_amount;
+            //internal_data.insert(internal_data.end(),{ID_OP.first , temp_element});
+            internal_data.push_back( { ID_OP.first , temp_element  } );
         }
     }
     umlauts(internal_data);
@@ -131,7 +134,7 @@ void elements_selection::how_much_items (){
         auto how_much = (size_t)get<1>(item.second);
         std::get<0>(set_of_items[item_num])++;  // huw much elennts of internal_data
         std::get<1>(set_of_items[item_num])+=how_much;
-        if (how_much==0) {
+        if (how_much<2) {          //how_much==0
             std::get<2>(set_of_items[item_num])++;
         }
     }
