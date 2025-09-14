@@ -6,6 +6,13 @@
 //
 #include "functions.h"
 
+void* operator new (size_t allocate){
+    static size_t memory {0};
+    memory +=allocate;
+    //std::cout<<" allocate "<< allocate << "bytes\n";
+    std::cout<<" allocate "<< memory << "   bytes memory \n";
+    return malloc(allocate);
+}
 
 void write_RTF(const path & path_to, const ostringstream & ostring_out ){
     ofstream out_RTF{path_to.c_str()};
