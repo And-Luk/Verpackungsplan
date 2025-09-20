@@ -9,8 +9,7 @@
 void* operator new (size_t allocate){
     static size_t memory {0};
     memory +=allocate;
-    //std::cout<<" allocate "<< allocate << "bytes\n";
-    std::cout<<" allocate "<< memory << "   bytes memory \n";
+    //std::cout<<" allocate "<< memory << "   bytes memory \n";
     return malloc(allocate);
 }
 

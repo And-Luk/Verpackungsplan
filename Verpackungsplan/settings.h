@@ -34,6 +34,7 @@ private:
     
     
     std::map<std::string, std::string> settings;
+    std::map<std::string, std::string> settings_in;
 //    std::map<std::string, std::string> settings{
 //        std::make_pair("Settings_file", "/Settings.json"),
 //        std::make_pair("Verpackungs_Plan_file", "/Plan.txt"),
