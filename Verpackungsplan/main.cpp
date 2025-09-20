@@ -6,66 +6,22 @@
 
 #include "functions.h"
 #include "elements_selection.h"
-namespace fs = std::filesystem;
+
 #include <sys/stat.h>
 
 #include "write_Excel_file.h"
+#include "settings.h"
 
-
-
-const char * files [] {
-    "Plan.txt",
-    "Data.txt",
-    "template.rtf",
-    "OUT.rtf",
-    "End_of.txt",
-    "/"
-};
 
 
 
 
 int main(int argc, const char * argv[]) {
     
-    const string current_path  { fs::current_path().string()};
-
-    
-    string  verpackungsplan_file_s{current_path.data()};
-    verpackungsplan_file_s.append(files[5]);
-    verpackungsplan_file_s.append(files[0]);
-    const char * verpackungsplan_file {  verpackungsplan_file_s.c_str() } ;
-
-    string  data_file_s{current_path.data()};
-    data_file_s.append(files[5]);
-    data_file_s.append(files[1]);
-    const char * data_file {  data_file_s.c_str() } ;
-   
-    string  RTF_template_file_s{current_path.data()};
-    RTF_template_file_s.append(files[5]);
-    RTF_template_file_s.append(files[2]);
-    const char * RTF_template_file {  RTF_template_file_s.c_str() } ;
-    
-    string  RTF_out_file_s{current_path.data()};
-    RTF_out_file_s.append(files[5]);
-    RTF_out_file_s.append(files[3]);
-    const char * RTF_out_file {  RTF_out_file_s.c_str() } ;
-    
-    
-    string  RTF_END_in_s{current_path.data()};
-    RTF_END_in_s.append(files[5]);
-    RTF_END_in_s.append(files[4]);
-    const char * RTF_END_in_file {  RTF_END_in_s.c_str() } ;
-    
-    
-    string system_call {"open ~/../../Applications/Pages.app '"};
-    system_call.append(RTF_out_file);
-    system_call.append("'");
-
-
+    Settings* const SET = Settings::getInstance();
     
     
     std::time_t rawtime;
-    
     std::tm* timeinfo;
     char buffer [80];
 
@@ -97,19 +53,15 @@ int main(int argc, const char * argv[]) {
    
     
     try {
-            const std::filesystem::path dir{verpackungsplan_file};
+            const std::filesystem::path dir{SET->getParameter("Verpackungs_Plan_file").c_str()};
             if (!exists(dir)) {
                 std::printf("Can'n open the verpack.txt file.\n\n");
                 return 1;
             }
         
-//        auto tmp1 = fs::path{dir};
-//        std::cout<<endl;
-//        std::printf("%s", tmp1.c_str()   )   ;
-//        std::cout<<endl;
         
         struct stat fileInfo;
-        stat(verpackungsplan_file_s.c_str(), &fileInfo);
+        stat(SET->getParameter("Verpackungs_Plan_file").c_str(), &fileInfo);
         unsigned long fileSize =  fileInfo.st_size;
         string file_Info_string{to_string (fileSize)};
        
@@ -128,13 +80,13 @@ int main(int argc, const char * argv[]) {
     
     try {
         vector_of_pair_size_t verpak{
-            read_verpack_txt(verpackungsplan_file,
+            read_verpack_txt(SET->getParameter("Verpackungs_Plan_file").c_str(),
                              "9\\d{5}[^(\\d|:alpha:)]",
                              "([0-9]{2}[.][0-9]{2}[.]|Tage[^:alpha:])",
                              "[[:digit:]]+")};
         
         multimap_data data{
-            read_data_txt( data_file,
+            read_data_txt( SET->getParameter("Data_file").c_str(),
                                "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\"|[[:space:]])*" ,
                                "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*",
                                "([0-9]+(\\.|\\,)+)?[0-9]+" ) };
@@ -142,7 +94,9 @@ int main(int argc, const char * argv[]) {
         
         elements_selection dumpf{verpak, data};
         
-        dumpf.read_write_RTF(RTF_template_file, RTF_out_file, RTF_END_in_file);
+        dumpf.read_write_RTF(SET->getParameter("RTF_template_file").c_str(),
+                                              SET->getParameter("RTF_OUT_file").c_str(),
+                                              SET->getParameter("RTF_END_file").c_str());
     } catch (exception ex) {
         std::printf("\n something didn't go as planned!\n") ;
         return 1;
@@ -179,14 +133,12 @@ int main(int argc, const char * argv[]) {
     std::printf("%s",buffer);
     
     
-    //temp
-    //system(system_call.c_str());
-    
+    //system(SET->getParameter("system_call").c_str());
     //"'make an Excel file"
     //write_Excel();
     
-    
-    
+
+
 
     
     
