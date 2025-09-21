@@ -11,6 +11,6 @@
 using namespace libxl;
 
 
-int write_Exel();
+int write_Excel();
 
 

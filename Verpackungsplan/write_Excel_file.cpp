@@ -5,7 +5,7 @@
 //  Created by Andrei Lukashevich on 07-09-2025.
 //
 #include "write_Excel_file.h"
-int write_Exel()
+int write_Excel()
 {
     Book* book = xlCreateBook();
     if(book)

@@ -26,15 +26,15 @@ int main(int argc, const char * argv[]) {
 //    const char * RTF_template_file_ch {  SET->getParameter("RTF_template_file").c_str() } ;
 //    const char * RTF_out_file_ch { SET->getParameter("RTF_OUT_file").c_str(), } ;
 //    const char * RTF_END_file_ch {  SET->getParameter("RTF_END_file").c_str() } ;
+    
 //    const char * system_call_ch {  SET->getParameter("system_call").c_str() } ;
     
-    const std::string Plan_file_ch                 { SET->getParameter("Verpackungs_Plan_file").c_str() } ;
-    const std::string Data_file_ch                 { SET->getParameter("Data_file").c_str(), } ;
-    const std::string RTF_template_file_ch  { SET->getParameter("RTF_template_file").c_str() } ;
-    const std::string RTF_OUT_file_ch         { SET->getParameter("RTF_OUT_file").c_str(), } ;
-    const std::string RTF_END_file_ch         { SET->getParameter("RTF_END_file").c_str() } ;
-    const std::string system_call_ch              { SET->getParameter("system_call").c_str() } ;
-
+    const std::string Plan_file_ch                             { SET->getParameter("Plan_file").c_str() } ;
+    const std::string Data_file_ch                             { SET->getParameter("Data_file").c_str() } ;
+    const std::string RTF_template_file_ch               { SET->getParameter("RTF_template_file").c_str() } ;
+    const std::string RTF_OUT_file_ch                      { SET->getParameter("RTF_OUT_file").c_str() } ;
+    const std::string RTF_END_file_ch                      { SET->getParameter("RTF_END_file").c_str() } ;
+        
     const std::string read_verpack_txt_reg_expr_1  { SET->getParameter("read_verpack_txt_reg_expr_1").c_str() } ;
     const std::string read_verpack_txt_reg_expr_2  { SET->getParameter("read_verpack_txt_reg_expr_2").c_str() } ;
     const std::string read_verpack_txt_reg_expr_3  { SET->getParameter("read_verpack_txt_reg_expr_3").c_str() } ;
@@ -43,7 +43,7 @@ int main(int argc, const char * argv[]) {
     const std::string read_data_txt_reg_expr_2        { SET->getParameter("read_data_txt_reg_expr_2").c_str() } ;
     const std::string read_data_txt_reg_expr_3        { SET->getParameter("read_data_txt_reg_expr_3").c_str() } ;
 
-    
+    const std::string system_call_ch                          { SET->getParameter("system_call").c_str() } ;
     
     
     std::time_t rawtime;
@@ -78,15 +78,16 @@ int main(int argc, const char * argv[]) {
    
     
     try {
-            const std::filesystem::path dir{Plan_file_ch.c_str()};
+            const std::filesystem::path dir{ Plan_file_ch.c_str() };
             if (!exists(dir)) {
-                std::printf("Can'n open the %s file.\n\n", Plan_file_ch.c_str());
+                std::cout<<std::endl<<" getParameter(\"Plan_file\")  "<<Plan_file_ch.c_str()<<std::endl<<std::endl;
+                std::printf("Can'n open the %s file.\n\n", Plan_file_ch.c_str() );
                 return 1;
             }
         
         
         struct stat fileInfo;
-        stat(Plan_file_ch.c_str(), &fileInfo);
+        stat( Plan_file_ch.c_str() , &fileInfo);
         unsigned long fileSize =  fileInfo.st_size;
         string file_Info_string{to_string (fileSize)};
        
@@ -105,23 +106,24 @@ int main(int argc, const char * argv[]) {
     
     try {
         vector_of_pair_size_t verpak{
-            read_verpack_txt(Plan_file_ch.c_str(),
-                                        read_verpack_txt_reg_expr_1.c_str(),        //  "9\\d{5}[^(\\d|:alpha:)]",
-                                        read_verpack_txt_reg_expr_2.c_str(),        //  "([0-9]{2}[.][0-9]{2}[.]|Tage[^:alpha:])",
-                                        read_verpack_txt_reg_expr_3.c_str())};     // "[[:digit:]]+")}
+            read_verpack_txt( Plan_file_ch.c_str() ,
+                             read_verpack_txt_reg_expr_1.c_str(),
+                             read_verpack_txt_reg_expr_2.c_str(),
+                             read_verpack_txt_reg_expr_3.c_str())};
         
         multimap_data data{
             read_data_txt( Data_file_ch.c_str(),
-                                    read_data_txt_reg_expr_1.c_str() ,      //  "(5|9)\\d{5}[^(\\d|[:alpha:]|)](\"|[[:space:]])*"
-                                    read_data_txt_reg_expr_2.c_str(),       //  "5\\d{5}[^(\\d|[:alpha:]|)](\")*([[:space:]])*(\\:)*([[:space:]])*"
-                                    read_data_txt_reg_expr_3.c_str() ) };  //  "([0-9]+(\\.|\\,)+)?[0-9]+"
+                          read_data_txt_reg_expr_1.c_str() ,
+                          read_data_txt_reg_expr_2.c_str(),
+                          read_data_txt_reg_expr_3.c_str() )
+        };
         
         
         elements_selection dumpf{verpak, data};
         
         dumpf.read_write_RTF( RTF_template_file_ch.c_str(),
-                                               RTF_OUT_file_ch.c_str(),
-                                               RTF_END_file_ch.c_str());
+                                                RTF_OUT_file_ch.c_str(),
+                                                RTF_END_file_ch.c_str() );
     } catch (exception ex) {
         std::printf("\n something didn't go as planned!\n") ;
         return 1;
@@ -159,8 +161,8 @@ int main(int argc, const char * argv[]) {
     
     
     //system(system_call_ch.c_str());
-    //"'make an Excel file"
-    //write_Excel();
+    
+    //write_Excel();  //"'make an Excel file"
     
 
 

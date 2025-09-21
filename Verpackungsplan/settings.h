@@ -10,7 +10,7 @@
 
 #include "header.h"
 #include <cereal/archives/json.hpp>
-#include <cereal/types/vector.hpp>
+//#include <cereal/types/vector.hpp>
 #include <cereal/types/map.hpp>
 
 namespace fs = std::filesystem;
@@ -23,18 +23,18 @@ private:
 //    bool arr[2] ={true, false};
 //    std::vector<int> vec  {1, 2, 3, 4, 5};
     
-    const char * files [6] {
-        "Plan.txt",
-        "Data.txt",
-        "template.rtf",
-        "OUT.rtf",
-        "End_of.txt",
-        "/"
-    };
+//    const char * files [6] {
+//        "Plan.txt",
+//        "Data.txt",
+//        "template.rtf",
+//        "OUT.rtf",
+//        "End_of.txt",
+//        "/"
+//    };
     
     
     std::map<std::string, std::string> settings;
-    std::map<std::string, std::string> settings_in;
+    //std::map<std::string, std::string> settings_in;
 //    std::map<std::string, std::string> settings{
 //        std::make_pair("Settings_file", "/Settings.json"),
 //        std::make_pair("Verpackungs_Plan_file", "/Plan.txt"),
