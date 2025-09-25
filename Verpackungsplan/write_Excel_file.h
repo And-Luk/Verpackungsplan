@@ -6,7 +6,7 @@
 //
 #pragma once
 #include "header.h"
-#include "libxl-mac-4.6.0/include_cpp/libxl.h"
+#include "libxl/include_cpp/libxl.h"
 
 using namespace libxl;
 

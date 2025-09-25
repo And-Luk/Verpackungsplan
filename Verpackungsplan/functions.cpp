@@ -6,10 +6,14 @@
 //
 #include "functions.h"
 
+
+
 void* operator new (size_t allocate){
-    static size_t memory {0};
-    memory +=allocate;
-    //std::cout<<" allocate "<< memory << "   bytes memory \n";
+//    static size_t memory {0};
+//    memory +=allocate;
+//    std::cout<<" allocate "<< memory << "   bytes memory \n";
+    Statistics* Stat = Statistics::getInstance();
+    Stat->setStatistics(allocate);
     return malloc(allocate);
 }
 

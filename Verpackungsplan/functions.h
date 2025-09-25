@@ -6,6 +6,8 @@
 //
 #pragma once
 #include "header.h"
+#include "statistics.h"
+
 
 typedef pair<const size_t, string> subI_subS;
 typedef deque<pair<size_t, size_t>> deque_of_pair_size_t;

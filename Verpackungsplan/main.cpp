@@ -11,7 +11,7 @@
 
 #include <sys/stat.h>
 
-
+#include "statistics.h"
 
 
 
@@ -164,10 +164,10 @@ int main(int argc, const char * argv[]) {
     
     //write_Excel();  //"'make an Excel file"
     
-
-
-
-    
+    Statistics* Stat = Statistics::getInstance();
+    cout<<"\033[35m"<<endl;
+    std::printf("\n amount of allocated memory %u  \n",  (uint)Stat->getStatistics()  );
+    cout<<endl;
     
     cout<<"\033[32m"<<endl;
     std::printf("\n OK!\n") ;
