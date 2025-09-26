@@ -12,12 +12,11 @@
 #echo "Look at this variable: " $(files)
 #	touch some_file
 
-# Имя исполняемого файла, который будет создан
-EXECUTABLE = main
+
 
 
 # Определяем компилятор C++ (clang на macOS)
-CXX = clang++
+CC = clang++
 
 
 
@@ -25,8 +24,8 @@ CXX = clang++
 # -std=c++11: использовать стандарт C++11
 # -g: включить отладочную информацию
 # -Wall: включить все предупреждения
-#works CXXFLAGS = -std=c++20 -Wall -g
-CXXFLAGS = -Wall -Wextra -Wpedantic -std=c++20 -g
+#works FLAGS = -std=c++20 -Wall -g
+FLAGS = -Wall -Wpedantic -Wextra -fdiagnostics-color=always  -std=c++20 -g
 
 
 # Директории для поиска заголовочных файлов (необязательно)
@@ -56,6 +55,11 @@ SOURCES = main.cpp functions.cpp settings.cpp statistics.cpp elements_selection.
 # Например, main.cpp -> main.o, my_class.cpp -> my_class.o
 OBJECTS = $(SOURCES:.cpp=.o)
 
+# Имя исполняемого файла, который будет создан
+EXECUTABLE = main
+
+
+
 
 # Правила сборки
 
@@ -63,24 +67,35 @@ OBJECTS = $(SOURCES:.cpp=.o)
 # При выполнении 'make' без аргументов, эта цель будет выполнена
 all: $(EXECUTABLE)
 	rm -f $(OBJECTS)
-	clear; echo "Clearing...🚿";
-	${CXX} --version
-	echo "\n";
-	mv -f $(EXECUTABLE) ~/Downloads/Verpackungsplan;
-	echo "\n";
+	clear
+	echo "Clearing...🚿\n"
+	${CC} --version
+	echo "\n"
+	mv -f $(EXECUTABLE) ~/Downloads/Verpackungsplan
+	echo "\n"
 	echo "Completed...💯\n"
 
 
 # Правило для создания исполняемого файла из объектных файлов
 $(EXECUTABLE): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $(OBJECTS) $(LIBRARY_DIRS) $(LIBRARIES) -o $(EXECUTABLE)
+	$(CC) $(FLAGS) $(OBJECTS) $(LIBRARY_DIRS) $(LIBRARIES) -o $(EXECUTABLE)
+
+
+main.o: main.cpp
+	$(CC) $(FLAGS) $(INCLUDE_DIRS) -c $< -o $@
+
+settings.o: settings.cpp
+	$(CC) $(FLAGS) $(INCLUDE_DIRS) -c $< -o $@
+
+
 
 
 # Правило для компиляции .cpp файлов в .o файлы
 # При компиляции файла source.cpp, создается файл source.o
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@ $(INCLUDE_DIRS)
-	#$(CXX) $(CXXFLAGS) -c $< -o $@
+	# works $(CC) $(FLAGS) -c $< -o $@ $(INCLUDE_DIRS)
+	$(CC) $(FLAGS) -c $< -o $@
+	#$(CC) $(FLAGS) -c $< -o $@
 
 
 
