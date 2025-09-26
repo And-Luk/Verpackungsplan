@@ -5,13 +5,15 @@
 //  Created by Andrei Lukashevich on 2025-03-25.
 
 #include "functions.h"
+#include "statistics.h"
+#include "settings.h"
 #include "elements_selection.h"
 #include "write_Excel_file.h"
-#include "settings.h"
+
 
 #include <sys/stat.h>
+#include <thread>
 
-#include "statistics.h"
 
 
 
