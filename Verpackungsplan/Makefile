@@ -12,11 +12,10 @@
 #echo "Look at this variable: " $(files)
 #	touch some_file
 
-
-
+DATE	 = ` date "+%Y.%m.%d	%H:%M:%S" `
 
 # Определяем компилятор C++ (clang на macOS)
-CC = clang++
+CXX = clang++
 
 
 
@@ -24,8 +23,8 @@ CC = clang++
 # -std=c++11: использовать стандарт C++11
 # -g: включить отладочную информацию
 # -Wall: включить все предупреждения
-#works FLAGS = -std=c++20 -Wall -g
-FLAGS = -Wall -Wpedantic -Wextra -fdiagnostics-color=always  -std=c++20 -g
+#works CXXFLAGS = -std=c++20 -Wall -g
+CXXFLAGS = -Wall -Wpedantic -Wextra -fdiagnostics-color=always  -std=c++20 -g
 
 
 # Директории для поиска заголовочных файлов (необязательно)
@@ -40,6 +39,8 @@ INCLUDE_DIRS =  -I $(shell pwd)
 LIBRARY_DIRS = -L $(shell pwd)/libxl/lib
 
 
+# Флаг -l указывает, какую библиотеку нужно подключить.
+# Например, -lmylib подключает библиотеку libmylib.a или libmylib.dylib
 # Имена библиотек для линковки (без префикса lib и расширения)
 # Например, для libmylib.a используйте -lmylib
 #LIBRARIES = -lmylib -lother_lib
@@ -58,52 +59,51 @@ OBJECTS = $(SOURCES:.cpp=.o)
 # Имя исполняемого файла, который будет создан
 EXECUTABLE = main
 
-
-
+#.RECIPEPREFIX := :
+	#	:@echo "recipe prefix symbol is set to '$(.RECIPEPREFIX)' "
 
 # Правила сборки
 
 # Цель по умолчанию: создать исполняемый файл (первая цель в файле)
 # При выполнении 'make' без аргументов, эта цель будет выполнена
 all: $(EXECUTABLE)
-	rm -f $(OBJECTS)
-	clear
-	echo "Clearing...🚿\n"
-	${CC} --version
-	echo "\n"
-	mv -f $(EXECUTABLE) ~/Downloads/Verpackungsplan
-	echo "\n"
-	echo "Completed...💯\n"
+	- @rm -f $(OBJECTS)
+	@echo "\n"
+	@echo "Clearing...🚿\n"
+	@#${CXX} --version
+	@echo "\n"
+	- @mv -f $(EXECUTABLE) ~/Downloads/Verpackungsplan
+	@echo "\n"
+	-@echo  $(DATE) "Completed...💯\n"
+	@#- @echo "Completed...💯\n"
 
 
 # Правило для создания исполняемого файла из объектных файлов
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(FLAGS) $(OBJECTS) $(LIBRARY_DIRS) $(LIBRARIES) -o $(EXECUTABLE)
+	- @ $(CXX) $(CXXFLAGS) $(OBJECTS) $(LIBRARY_DIRS) -o $(EXECUTABLE) $(LIBRARIES)
 
 
-main.o: main.cpp
-	$(CC) $(FLAGS) $(INCLUDE_DIRS) -c $< -o $@
+
 
 settings.o: settings.cpp
-	$(CC) $(FLAGS) $(INCLUDE_DIRS) -c $< -o $@
+	- @ $(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c $< -o $@
 
-
+main.o: main.cpp settings.cpp functions.cpp statistics.cpp elements_selection.cpp write_Excel_file.cpp
+	- @ $(CXX) $(CXXFLAGS)  $(INCLUDE_DIRS) -c $< -o $@
 
 
 # Правило для компиляции .cpp файлов в .o файлы
 # При компиляции файла source.cpp, создается файл source.o
 %.o: %.cpp
-	# works $(CC) $(FLAGS) -c $< -o $@ $(INCLUDE_DIRS)
-	$(CC) $(FLAGS) -c $< -o $@
-	#$(CC) $(FLAGS) -c $< -o $@
-
+	- @ $(CXX) $(CXXFLAGS) -c $< -o $@
 
 
 # Правило для очистки (удаления скомпилированных файлов)
 # Пример: 'make clean'
 clean:
-	clear; echo "Clearing...🚿";
-	rm -f $(OBJECTS) $(EXECUTABLE)
+	- @ rm -f $(OBJECTS) $(EXECUTABLE)
+	- @ rm -f ~/Downloads/Verpackungsplan/main ~/Downloads/Verpackungsplan/example.xls ~/Downloads/Verpackungsplan/OUT.rtf
+	- @ echo "Clearing...🚿\n"
 	
 # Правило для запуска исполняемого файла
 # Пример: 'make run'
