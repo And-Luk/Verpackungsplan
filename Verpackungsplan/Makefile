@@ -1,5 +1,5 @@
 
-#BUILD_DIR := /Users/and/Downloads/Verpackungsplan
+#BUILD_DIR := /Users/and/Downloads/Verpackungsplan/Verpackungsplan
 #SRC_DIRS := /Users/and/workspace/Verpackungsplan/Verpackungsplan
 # Find all the C and C++ files we want to compile
 # Note the single quotes around the * expressions. The shell will incorrectly expand these otherwise, but we want to send the * directly to the find command.
