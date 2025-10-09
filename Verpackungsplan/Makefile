@@ -24,19 +24,36 @@ CXX = clang++
 # -g: включить отладочную информацию
 # -Wall: включить все предупреждения
 #works CXXFLAGS = -std=c++20 -Wall -g
-CXXFLAGS = -Wall -Wpedantic -Wextra -fdiagnostics-color=always  -std=c++20 -g
+#CXXFLAGS = -Wall -Wpedantic -Wextra -fdiagnostics-color=always  -std=c++20 -g
+#works CXXFLAGS = -Wall -Wpedantic -std=c++20
+#CXXFLAGS= -O2 -v -g -Wall -mmacosx-version-min=26.0.1 -fmessage-length=0
+CXXFLAGS= -O2 -v -g -Wall -mmacosx-version-min=26.0.1 -fmessage-length=0 -std=c++20
+
 
 
 # Директории для поиска заголовочных файлов (необязательно)
-#INCLUDE_DIRS = -I/путь/к/заголовкам
+#INCLUDE_DIRS = -I/путь/к/заголовкам  -I /opt/homebrew/Cellar/opencv/4.12.0_11/include/opencv4
 #works  INCLUDE_DIRS =  -I.
-INCLUDE_DIRS =  -I $(shell pwd)
+
+#INCLUDE_DIRS =  -I $(shell pwd) \
+#	-I /usr/local/include/opencv4 \
+#	-I /opt/homebrew/Cellar/opencv/4.12.0_11/include/opencv4
+INCLUDE_DIRS =  -I /usr/local/include/opencv4 \
+	-I $(shell pwd) \
+	-I /opt/homebrew/Cellar/opencv/4.12.0_11/include/opencv4
+
+
 
 
 # Директории для поиска библиотек
 #LIBRARY_DIRS = -L/путь/к/вашим/библиотекам -L/usr/local/lib
 # works LIBRARY_DIRS = -L./libxl/lib
-LIBRARY_DIRS = -L $(shell pwd)/libxl/lib
+
+#LIBRARY_DIRS = -L $(shell pwd)/libxl/lib \
+#	-L /opt/homebrew/Cellar/opencv/4.12.0_11/lib
+LIBRARY_DIRS = -L /opt/homebrew/Cellar/opencv/4.12.0_11/lib \
+	-L $(shell pwd)/libxl/lib
+
 
 
 # Флаг -l указывает, какую библиотеку нужно подключить.
@@ -44,11 +61,27 @@ LIBRARY_DIRS = -L $(shell pwd)/libxl/lib
 # Имена библиотек для линковки (без префикса lib и расширения)
 # Например, для libmylib.a используйте -lmylib
 #LIBRARIES = -lmylib -lother_lib
-LIBRARIES = -lxl
+LIBRARIES = -lxl \
+	-lopencv_core \
+	-lopencv_videoio \
+	-lopencv_highgui \
+	-lopencv_imgproc \
+	-lopencv_calib3d \
+	-lopencv_video \
+	-lopencv_features2d \
+	-lopencv_ml \
+	-lopencv_objdetect \
+	-lopencv_imgcodecs \
 
 
 # Имена исходных файлов проекта (например, main.cpp, my_class.cpp)
-SOURCES = main.cpp functions.cpp settings.cpp statistics.cpp elements_selection.cpp write_Excel_file.cpp
+SOURCES = main.cpp functions.cpp \
+	settings.cpp \
+	statistics.cpp \
+	elements_selection.cpp \
+	write_Excel_file.cpp \
+	read_Excel_file.cpp \
+	photo.cpp
 
 
 # Файлы объектов
@@ -62,8 +95,8 @@ EXECUTABLE = main
 #.RECIPEPREFIX := :
 	#	:@echo "recipe prefix symbol is set to '$(.RECIPEPREFIX)' "
 
-# Правила сборки
 
+# Правила сборки
 # Цель по умолчанию: создать исполняемый файл (первая цель в файле)
 # При выполнении 'make' без аргументов, эта цель будет выполнена
 all: $(EXECUTABLE)
@@ -79,23 +112,42 @@ all: $(EXECUTABLE)
 
 
 # Правило для создания исполняемого файла из объектных файлов
+#$(EXECUTABLE): $(OBJECTS)
+#	$(CXX) $(CXXFLAGS) $(OBJECTS) $(LIBRARY_DIRS) -o $(EXECUTABLE) $(LIBRARIES)
+
+# Правило для создания исполняемого файла из объектных файлов
 $(EXECUTABLE): $(OBJECTS)
-	- @ $(CXX) $(CXXFLAGS) $(OBJECTS) $(LIBRARY_DIRS) -o $(EXECUTABLE) $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) $(OBJECTS) $(LIBRARY_DIRS) $(LIBRARIES) -o $(EXECUTABLE)
 
 
+photo.o: photo.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c $< -o $@
 
 
 settings.o: settings.cpp
-	- @ $(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c $< -o $@
 
-main.o: main.cpp settings.cpp functions.cpp statistics.cpp elements_selection.cpp write_Excel_file.cpp
-	- @ $(CXX) $(CXXFLAGS)  $(INCLUDE_DIRS) -c $< -o $@
+#works main.o: main.cpp \
+#	settings.cpp \
+#	functions.cpp \
+#	statistics.cpp \
+#	elements_selection.cpp \
+#	write_Excel_file.cpp \
+#	read_Excel_file.cpp
+#	$(CXX) $(CXXFLAGS)  $(INCLUDE_DIRS) -c $< -o $@
+
+#main.o: main.cpp
+	#$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c $< -o $@
+
+main.o: main.cpp
+	$(CXX) $(CXXFLAGS)  $(INCLUDE_DIRS)  $(LIBRARY_DIRS)  $(LIBRARIES) -c $< -o $@   #  $(LIBRARY_DIRS)  $(LIBRARIES)
+
 
 
 # Правило для компиляции .cpp файлов в .o файлы
 # При компиляции файла source.cpp, создается файл source.o
 %.o: %.cpp
-	- @ $(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 
 # Правило для очистки (удаления скомпилированных файлов)
