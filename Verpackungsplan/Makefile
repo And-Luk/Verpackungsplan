@@ -1,53 +1,171 @@
-# Thanks to Job Vranish (https://spin.atomicobject.com/2016/08/26/makefile-c-projects/)
-TARGET_EXEC := final_program
 
-#make VERBOSE=1
-
-
-BUILD_DIR := ./build
-SRC_DIRS := ./src
-
+BUILD_DIR := /Users/and/Downloads/Verpackungsplan/Verpackungsplan
+SRC_DIRS := /Users/and/workspace/Verpackungsplan/Verpackungsplan/src
 # Find all the C and C++ files we want to compile
 # Note the single quotes around the * expressions. The shell will incorrectly expand these otherwise, but we want to send the * directly to the find command.
-SRCS := $(shell find $(SRC_DIRS) -name '*.cpp' -or -name '*.c' -or -name '*.s')
-
-# Prepends BUILD_DIR and appends .o to every src file
-# As an example, ./your_dir/hello.cpp turns into ./build/./your_dir/hello.cpp.o
-OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
-
-# String substitution (suffix version without %).
-# As an example, ./build/hello.cpp.o turns into ./build/hello.cpp.d
-DEPS := $(OBJS:.o=.d)
-
-# Every folder in ./src will need to be passed to GCC so that it can find header files
-INC_DIRS := $(shell find $(SRC_DIRS) -type d)
-# Add a prefix to INC_DIRS. So moduleA would become -ImoduleA. GCC understands this -I flag
-INC_FLAGS := $(addprefix -I,$(INC_DIRS))
-
-# The -MMD and -MP flags together generate Makefiles for us!
-# These files will have .d instead of .o as the output.
-CPPFLAGS := $(INC_FLAGS) -MMD -MP
-
-# The final build step.
-$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
-	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
-
-# Build step for C source
-$(BUILD_DIR)/%.c.o: %.c
-	mkdir -p $(dir $@)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
-
-# Build step for C++ source
-$(BUILD_DIR)/%.cpp.o: %.cpp
-	mkdir -p $(dir $@)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+SOURCES := $(shell find $(SRC_DIRS) -name '*.cpp' -or -name '*.c' -or -name '*.s')
 
 
-.PHONY: clean
+
+#files := main.cpp function.cpp
+#some_file: $(files)
+#echo "Look at this variable: " $(files)
+#	touch some_file
+
+DATE	 = ` date "+%Y.%m.%d	%H:%M:%S" `
+
+# Определяем компилятор C++ (clang на macOS)
+CXX = clang++
+
+
+
+# Определяем флаги компиляции
+# -std=c++11: использовать стандарт C++11
+# -g: включить отладочную информацию
+# -Wall: включить все предупреждения
+#works CXXFLAGS = -std=c++20 -Wall -g
+#CXXFLAGS = -Wall -Wpedantic -Wextra -fdiagnostics-color=always  -std=c++20 -g
+#works CXXFLAGS = -Wall -Wpedantic -std=c++20
+#CXXFLAGS= -O2 -v -g -Wall -mmacosx-version-min=26.0.1 -fmessage-length=0
+CXXFLAGS= -O2 -v -g -Wall -mmacosx-version-min=26.0.1 -fmessage-length=0 -std=c++20
+
+
+
+# Директории для поиска заголовочных файлов (необязательно)
+#INCLUDE_DIRS = -I/путь/к/заголовкам  -I /opt/homebrew/Cellar/opencv/4.12.0_11/include/opencv4
+#works  INCLUDE_DIRS =  -I.
+
+#INCLUDE_DIRS =  -I $(shell pwd) \
+#	-I /usr/local/include/opencv4 \
+#	-I /opt/homebrew/Cellar/opencv/4.12.0_11/include/opencv4
+INCLUDE_DIRS =  -I /usr/local/include/opencv4 \
+	-I $(shell pwd) \
+	-I /opt/homebrew/Cellar/opencv/4.12.0_11/include/opencv4
+
+
+
+
+# Директории для поиска библиотек
+#LIBRARY_DIRS = -L/путь/к/вашим/библиотекам -L/usr/local/lib
+# works LIBRARY_DIRS = -L./libxl/lib
+
+#LIBRARY_DIRS = -L $(shell pwd)/libxl/lib \
+#	-L /opt/homebrew/Cellar/opencv/4.12.0_11/lib
+LIBRARY_DIRS = -L /opt/homebrew/Cellar/opencv/4.12.0_11/lib \
+	-L $(shell pwd)/libxl/lib
+
+
+
+# Флаг -l указывает, какую библиотеку нужно подключить.
+# Например, -lmylib подключает библиотеку libmylib.a или libmylib.dylib
+# Имена библиотек для линковки (без префикса lib и расширения)
+# Например, для libmylib.a используйте -lmylib
+#LIBRARIES = -lmylib -lother_lib
+LIBRARIES = -lxl \
+	-lopencv_core \
+	-lopencv_videoio \
+	-lopencv_highgui \
+	-lopencv_imgproc \
+	-lopencv_calib3d \
+	-lopencv_video \
+	-lopencv_features2d \
+	-lopencv_ml \
+	-lopencv_objdetect \
+	-lopencv_imgcodecs \
+
+
+# Имена исходных файлов проекта (например, main.cpp, my_class.cpp)
+#SOURCES = main.cpp functions.cpp \
+#	settings.cpp \
+#	statistics.cpp \
+#	elements_selection.cpp \
+#	write_Excel_file.cpp \
+#	read_Excel_file.cpp \
+#	photo.cpp
+
+
+# Файлы объектов
+# Автоматически генерируем имена объектных файлов из имен исходных файлов
+# Например, main.cpp -> main.o, my_class.cpp -> my_class.o
+OBJECTS = $(SOURCES:.cpp=.o)
+
+# Имя исполняемого файла, который будет создан
+EXECUTABLE = main
+
+#.RECIPEPREFIX := :
+	#	:@echo "recipe prefix symbol is set to '$(.RECIPEPREFIX)' "
+
+
+# Правила сборки
+# Цель по умолчанию: создать исполняемый файл (первая цель в файле)
+# При выполнении 'make' без аргументов, эта цель будет выполнена
+all: $(EXECUTABLE)
+	- @rm -f $(OBJECTS)
+	@echo "\n"
+	@echo "Clearing...🚿\n"
+	@#${CXX} --version
+	@echo "\n"
+	- @mv -f $(EXECUTABLE) ~/Downloads/Verpackungsplan
+	@echo "\n"
+	-@echo  $(DATE) "Completed...💯\n"
+	@#- @echo "Completed...💯\n"
+
+
+# Правило для создания исполняемого файла из объектных файлов
+#$(EXECUTABLE): $(OBJECTS)
+#	$(CXX) $(CXXFLAGS) $(OBJECTS) $(LIBRARY_DIRS) -o $(EXECUTABLE) $(LIBRARIES)
+
+# Правило для создания исполняемого файла из объектных файлов
+$(EXECUTABLE): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(OBJECTS) $(LIBRARY_DIRS) $(LIBRARIES) -o $(EXECUTABLE)
+
+
+photo.o: photo.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c $< -o $@
+
+
+settings.o: settings.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c $< -o $@
+
+#works main.o: main.cpp \
+#	settings.cpp \
+#	functions.cpp \
+#	statistics.cpp \
+#	elements_selection.cpp \
+#	write_Excel_file.cpp \
+#	read_Excel_file.cpp
+#	$(CXX) $(CXXFLAGS)  $(INCLUDE_DIRS) -c $< -o $@
+
+#main.o: main.cpp
+	#$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c $< -o $@
+
+main.o: main.cpp
+	$(CXX) $(CXXFLAGS)  $(INCLUDE_DIRS)  $(LIBRARY_DIRS)  $(LIBRARIES) -c $< -o $@   #  $(LIBRARY_DIRS)  $(LIBRARIES)
+
+
+
+# Правило для компиляции .cpp файлов в .o файлы
+# При компиляции файла source.cpp, создается файл source.o
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+
+# Правило для очистки (удаления скомпилированных файлов)
+# Пример: 'make clean'
 clean:
-	rm -r $(BUILD_DIR)
+	- @ rm -f $(OBJECTS) $(EXECUTABLE)
+	- @ rm -f ~/Downloads/Verpackungsplan/main ~/Downloads/Verpackungsplan/example.xls ~/Downloads/Verpackungsplan/OUT.rtf
+	- @ echo "Clearing...🚿\n"
+	
+# Правило для запуска исполняемого файла
+# Пример: 'make run'
+run: $(EXECUTABLE)
+	./$(EXECUTABLE)
 
-# Include the .d makefiles. The - at the front suppresses the errors of missing
-# Makefiles. Initially, all the .d files will be missing, and we don't want those
-# errors to show up.
--include $(DEPS)
+
+
+
+
+
+
+

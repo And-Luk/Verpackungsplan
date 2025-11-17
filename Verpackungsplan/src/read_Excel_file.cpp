@@ -36,7 +36,7 @@ int read_Excel(const char* input){
                 {
                    switch((int)cellType)
                    {
-                      case CELLTYPE_EMPTY: std::wcout << "[empty]"; break;
+                      case CELLTYPE_EMPTY: std::wcout << "[empty]"; break;    //case CELLTYPE_EMPTY: std::wcout << "[empty]"; break;   works
                       case CELLTYPE_NUMBER:
                       {
                          double d = sheet->readNum(row, col);
