@@ -21,6 +21,7 @@ public:
     static Statistics* getInstance();
     size_t getStatistics();
     void setStatistics(size_t value);
+    void cutStatistics();
     Statistics(const Statistics&) = delete;
     Statistics& operator=(const Statistics&) = delete;
 };

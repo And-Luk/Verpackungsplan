@@ -33,36 +33,52 @@ int main(int argc, const char * argv[]) {
     char RTF_template_file[200];
     char RTF_OUT_file[200];
     char RTF_END_file[200];
-    strcpy(Plan_file, settings->getParameter("Plan_file").c_str() );
-    strcpy(Data_txt_file,  settings->getParameter("Data_file").c_str() );
-    strcpy(RTF_template_file, settings->getParameter("RTF_template_file").c_str() );
-    strcpy(RTF_OUT_file,  settings->getParameter("RTF_OUT_file").c_str() );
-    strcpy(RTF_END_file,  settings->getParameter("RTF_END_file").c_str() );
+//    strcpy(Plan_file, settings->getParameter("Plan_file").c_str() );
+//    strcpy(Data_txt_file,  settings->getParameter("Data_file").c_str() );
+//    strcpy(RTF_template_file, settings->getParameter("RTF_template_file").c_str() );
+//    strcpy(RTF_OUT_file,  settings->getParameter("RTF_OUT_file").c_str() );
+//    strcpy(RTF_END_file,  settings->getParameter("RTF_END_file").c_str() );
+    strcpy(Plan_file, settings->getParameter("Plan_file") );
+    strcpy(Data_txt_file,  settings->getParameter("Data_file") );
+    strcpy(RTF_template_file, settings->getParameter("RTF_template_file") );
+    strcpy(RTF_OUT_file,  settings->getParameter("RTF_OUT_file") );
+    strcpy(RTF_END_file,  settings->getParameter("RTF_END_file") );
+    
+    
     
     char read_verpack_txt_reg_expr_1[100];
     char read_verpack_txt_reg_expr_2[100];
     char read_verpack_txt_reg_expr_3[100];
-    strcpy(read_verpack_txt_reg_expr_1,  settings->getParameter("read_verpack_txt_reg_expr_1").c_str() );
-    strcpy(read_verpack_txt_reg_expr_2,   settings->getParameter("read_verpack_txt_reg_expr_2").c_str() );
-    strcpy(read_verpack_txt_reg_expr_3,   settings->getParameter("read_verpack_txt_reg_expr_3").c_str() );
-
+//    strcpy(read_verpack_txt_reg_expr_1,  settings->getParameter("read_verpack_txt_reg_expr_1").c_str() );
+//    strcpy(read_verpack_txt_reg_expr_2,   settings->getParameter("read_verpack_txt_reg_expr_2").c_str() );
+//    strcpy(read_verpack_txt_reg_expr_3,   settings->getParameter("read_verpack_txt_reg_expr_3").c_str() );
+    strcpy(read_verpack_txt_reg_expr_1,  settings->getParameter("read_verpack_txt_reg_expr_1")  );
+    strcpy(read_verpack_txt_reg_expr_2,   settings->getParameter("read_verpack_txt_reg_expr_2")  );
+    strcpy(read_verpack_txt_reg_expr_3,   settings->getParameter("read_verpack_txt_reg_expr_3")  );
+    
     char read_data_txt_reg_expr_1[100];
     char read_data_txt_reg_expr_2[100];
     char read_data_txt_reg_expr_3[100];
-    strcpy(read_data_txt_reg_expr_1,  settings->getParameter("read_data_txt_reg_expr_1").c_str() );
-    strcpy(read_data_txt_reg_expr_2,  settings->getParameter("read_data_txt_reg_expr_2").c_str() );
-    strcpy(read_data_txt_reg_expr_3,   settings->getParameter("read_data_txt_reg_expr_3").c_str() );
-
+//    strcpy(read_data_txt_reg_expr_1,  settings->getParameter("read_data_txt_reg_expr_1").c_str() );
+//    strcpy(read_data_txt_reg_expr_2,  settings->getParameter("read_data_txt_reg_expr_2").c_str() );
+//    strcpy(read_data_txt_reg_expr_3,   settings->getParameter("read_data_txt_reg_expr_3").c_str() );
+    strcpy(read_data_txt_reg_expr_1,  settings->getParameter("read_data_txt_reg_expr_1")  );
+    strcpy(read_data_txt_reg_expr_2,  settings->getParameter("read_data_txt_reg_expr_2")  );
+    strcpy(read_data_txt_reg_expr_3,   settings->getParameter("read_data_txt_reg_expr_3")  );
+    
     char Data_dat_file[200];
-    strcpy(Data_dat_file,  std::move( settings->getParameter("read_data_dat").c_str()) );
+//    strcpy(Data_dat_file,  std::move( settings->getParameter("read_data_dat").c_str()) );
+    strcpy(Data_dat_file,  std::move( settings->getParameter("read_data_dat") ) );
    // const std::string read_data_dat        { settings->getParameter("read_data_dat").c_str() } ;
 
     char system_call_ch[100];
-    strcpy(system_call_ch,  std::move( settings->getParameter("system_call").c_str()) );
+//    strcpy(system_call_ch,  std::move( settings->getParameter("system_call").c_str()) );
+    strcpy(system_call_ch,  std::move( settings->getParameter("system_call") ) );
     //const std::string system_call_ch                          { settings->getParameter("system_call").c_str() } ;
     
     char HASH_of_Settings_json[100];
-    strcpy(HASH_of_Settings_json,  std::move( settings->getParameter("hash_value").c_str()) );
+    //strcpy(HASH_of_Settings_json,  std::move( settings->getParameter("hash_value").c_str()) );
+    strcpy(HASH_of_Settings_json,  std::move( settings->getParameter("hash_value") ) );
     
     std::cout<<"\033[32m"<<endl;
     printTIME();
@@ -81,9 +97,9 @@ int main(int argc, const char * argv[]) {
             std::printf(" an error.\n\n");
         }
     
-    multimap_data* data;
+    multimap_data* data{nullptr};
     
-    char* HASH_Data_txt = new char ;
+    char* HASH_Data_txt = new char[100] ;
     HASH_Data_txt = getFileHASH(Data_txt_file);
     //std::printf("HASH_Data_txt is \" %s \"\n", HASH_Data_txt  );
     //std::printf("HASH value of Data.txt file is %s\n", HASH_Data_txt );
@@ -111,15 +127,11 @@ int main(int argc, const char * argv[]) {
             std::printf("DATA of \"%s\"\n", Data_txt_file );
             std::printf("HASH_Data_txt is --1\"%s\"\n", HASH_Data_txt  );
             data=read_data_txt( Data_txt_file,  read_data_txt_reg_expr_1,  read_data_txt_reg_expr_2,   read_data_txt_reg_expr_3);
+            
             std::printf("HASH_ is \n" );
             std::printf("HASH_Data_txt is --2\"%s\"\n", HASH_Data_txt  );
-            
-            //Serializer * const serializer{Serializer::getInstance(Data_dat_file)};
             serializer->writeDataFile(*data);
-            
-            //std::printf("HASH_Data_txt is --3\"%s\"\n", HASH_Data_txt  );
             Settings* const settings = Settings::getInstance();
-            //std::printf("HASH_Data_txt is --4\"%s\"\n", HASH_Data_txt  );
             settings->setParameter("hash_value", HASH_Data_txt );
             
             
@@ -240,6 +252,13 @@ int main(int argc, const char * argv[]) {
     
     
     //------------------------------------------------------------
+//    for (auto item : *data) {
+//        //multimap. erase(item.second);
+//        
+//    }
+    //multimap.erase(data->__BEGIN_DECLS, data->__END_DECLS);
+    //data->erase(data->begin(), data->end());
+    //delete data;
     
     cout<<"\033[32m"<<endl;
     std::printf("\n OK!\n") ;

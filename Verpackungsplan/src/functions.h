@@ -20,6 +20,8 @@ typedef multimap<size_t, tup_element, std::less<size_t>, std::allocator<std::pai
 
 void* operator new (size_t );
 
+void operator delete(void *ptr) noexcept;
+
 void write_RTF(const path &, const ostringstream &);
 
 auto find_and_replace (const string &, const char*, const  string)-> string;

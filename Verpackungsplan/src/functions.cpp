@@ -9,13 +9,21 @@
 
 
 void* operator new (size_t allocate){
-//    static size_t memory {0};
-//    memory +=allocate;
-//    std::cout<<" allocate "<< memory << "   bytes memory \n";
     Statistics* Stat = Statistics::getInstance();
     Stat->setStatistics(allocate);
     return malloc(allocate);
 }
+
+
+
+void operator delete(void *ptr) noexcept{
+    //std::cout<< "Overloading delete operator " << endl;
+    free(ptr);
+    Statistics* Stat = Statistics::getInstance();
+    Stat->cutStatistics();
+}
+
+
 
 void write_RTF(const path & path_to, const ostringstream & ostring_out ){
     ofstream out_RTF{path_to.c_str()};
@@ -206,7 +214,7 @@ char* getFileHASH(const path & path_to_file){
     stat( path_to_file.c_str() , &fileInfo);
     unsigned long fileSize =  fileInfo.st_size;
     
-    char* HASH = new char;
+    char* HASH = new char[100];
     std::strcat(HASH, to_string( fileSize).c_str());
        
     fileSize = fileInfo.st_ino;
