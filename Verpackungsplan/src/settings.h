@@ -32,7 +32,7 @@ private:
 //        "/"
 //    };
     
-    
+    string current_path; //= { fs::current_path().string()};
     std::map<std::string, std::string> settings;
     //std::map<std::string, std::string> settings_in;
 //    std::map<std::string, std::string> settings{
@@ -47,6 +47,7 @@ private:
 public:
     static Settings* getInstance();
     std::string getParameter(std::string search);
+    void setParameter(const char* key, const char* value);
     Settings(const Settings&) = delete;
     Settings& operator=(const Settings&) = delete;
 };

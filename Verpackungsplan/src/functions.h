@@ -7,6 +7,9 @@
 #pragma once
 #include "header.h"
 #include "statistics.h"
+#include <sys/stat.h> // file info HASH
+#include <cstdlib> // "system" & file info HASH
+
 
 
 typedef pair<const size_t, string> subI_subS;
@@ -26,7 +29,11 @@ auto find_the_desired_string (const string & , const char*)-> bool;
 auto read_verpack_txt(const path &, const char*  reg_expr_1, const char*   reg_expr_2, const char* reg_expr_3)-> vector_of_pair_size_t;
 auto substring_verpack_txt(const string & , const char*)-> deque<size_t>;
 
-auto read_data_txt(const path & , const char* reg_expr_1  , const char* reg_expr_2, const char* reg_expr_3)-> multimap_data;
+auto read_data_txt(const path & path_to_file, const char* reg_expr_1  , const char* reg_expr_2, const char* reg_expr_3)-> multimap_data*;
 auto substring (const string & source, const char* reg_expr_1  , const char* reg_expr_2  )-> tup_element;
 
 void umlauts (vector<pair<size_t, std::tuple<size_t, int, string >>> & internal_data );
+
+char* getFileHASH(const path &);
+
+char* printTIME();

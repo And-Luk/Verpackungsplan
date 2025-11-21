@@ -15,7 +15,6 @@
 
 
 
-#include <sys/stat.h>
 #include <thread>
 
 
@@ -28,93 +27,48 @@ int main(int argc, const char * argv[]) {
     //system("pbpaste > Plan.txt");
     Settings* const settings = Settings::getInstance();
     
-   // const char * verpackungsplan_file_ch = settings->getParameter("Verpackungs_Plan_file").c_str()  ;
-//    const char * data_file_ch {   settings->getParameter("Data_file").c_str(), } ;
-//    const char * RTF_template_file_ch {  settings->getParameter("RTF_template_file").c_str() } ;
-//    const char * RTF_out_file_ch { settings->getParameter("RTF_OUT_file").c_str(), } ;
-//    const char * RTF_END_file_ch {  settings->getParameter("RTF_END_file").c_str() } ;
-    
-//    const char * system_call_ch {  settings->getParameter("system_call").c_str() } ;
     
     char Plan_file[200];
-    char Data_file[200];
+    char Data_txt_file[200];
     char RTF_template_file[200];
     char RTF_OUT_file[200];
     char RTF_END_file[200];
-    
     strcpy(Plan_file, settings->getParameter("Plan_file").c_str() );
-    //strcpy(Plan_file_ch,  std::move( settings->getParameter("Plan_file").c_str()) );
-    strcpy(Data_file,  settings->getParameter("Data_file").c_str() );
-    //strcpy(Data_file_ch,  std::move( settings->getParameter("Data_file").c_str()) );
+    strcpy(Data_txt_file,  settings->getParameter("Data_file").c_str() );
     strcpy(RTF_template_file, settings->getParameter("RTF_template_file").c_str() );
-    //strcpy(RTF_template_file_ch,  std::move( settings->getParameter("RTF_template_file").c_str()) );
     strcpy(RTF_OUT_file,  settings->getParameter("RTF_OUT_file").c_str() );
-    //strcpy(RTF_OUT_file_ch,  std::move( settings->getParameter("RTF_OUT_file").c_str()) );
     strcpy(RTF_END_file,  settings->getParameter("RTF_END_file").c_str() );
-    //strcpy(RTF_END_file_ch,  std::move( settings->getParameter("RTF_END_file").c_str()) );
-
     
     char read_verpack_txt_reg_expr_1[100];
     char read_verpack_txt_reg_expr_2[100];
     char read_verpack_txt_reg_expr_3[100];
-    strcpy(read_verpack_txt_reg_expr_1,  std::move( settings->getParameter("read_verpack_txt_reg_expr_1").c_str()) );
-    strcpy(read_verpack_txt_reg_expr_2,  std::move( settings->getParameter("read_verpack_txt_reg_expr_2").c_str()) );
-    strcpy(read_verpack_txt_reg_expr_3,  std::move( settings->getParameter("read_verpack_txt_reg_expr_3").c_str()) );
+    strcpy(read_verpack_txt_reg_expr_1,  settings->getParameter("read_verpack_txt_reg_expr_1").c_str() );
+    strcpy(read_verpack_txt_reg_expr_2,   settings->getParameter("read_verpack_txt_reg_expr_2").c_str() );
+    strcpy(read_verpack_txt_reg_expr_3,   settings->getParameter("read_verpack_txt_reg_expr_3").c_str() );
 
-    
-    
     char read_data_txt_reg_expr_1[100];
     char read_data_txt_reg_expr_2[100];
     char read_data_txt_reg_expr_3[100];
-    strcpy(read_data_txt_reg_expr_1,  std::move( settings->getParameter("read_data_txt_reg_expr_1").c_str()) );
-    strcpy(read_data_txt_reg_expr_2,  std::move( settings->getParameter("read_data_txt_reg_expr_2").c_str()) );
-    strcpy(read_data_txt_reg_expr_3,  std::move( settings->getParameter("read_data_txt_reg_expr_3").c_str()) );
+    strcpy(read_data_txt_reg_expr_1,  settings->getParameter("read_data_txt_reg_expr_1").c_str() );
+    strcpy(read_data_txt_reg_expr_2,  settings->getParameter("read_data_txt_reg_expr_2").c_str() );
+    strcpy(read_data_txt_reg_expr_3,   settings->getParameter("read_data_txt_reg_expr_3").c_str() );
 
-    
-    char read_data_dat[100];
-    strcpy(read_data_dat,  std::move( settings->getParameter("read_data_dat").c_str()) );
+    char Data_dat_file[200];
+    strcpy(Data_dat_file,  std::move( settings->getParameter("read_data_dat").c_str()) );
    // const std::string read_data_dat        { settings->getParameter("read_data_dat").c_str() } ;
 
     char system_call_ch[100];
     strcpy(system_call_ch,  std::move( settings->getParameter("system_call").c_str()) );
     //const std::string system_call_ch                          { settings->getParameter("system_call").c_str() } ;
     
-    char hash_value[100];
-    strcpy(hash_value,  std::move( settings->getParameter("hash_value").c_str()) );
+    char HASH_of_Settings_json[100];
+    strcpy(HASH_of_Settings_json,  std::move( settings->getParameter("hash_value").c_str()) );
     
-    
-    
-    std::time_t rawtime;
-    std::tm* timeinfo;
-    char buffer [80];
+    std::cout<<"\033[32m"<<endl;
+    printTIME();
+    std::cout<<"\033[0m"<<endl;
 
-    std::time(&rawtime);
-    timeinfo = std::localtime(&rawtime);
-    std::strftime(buffer,80,"%d-%m-%Y    %H:%M:%S",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
-    cout<<"\033[31m"<<endl;
-    std::printf("%s",buffer);
-    //std::puts(buffer);
-    
-    
-//  auto tomorrow = today + 24h;
-//  std::cout << "Tomorrow is " << tomorrow << "\n";
-//  
-//  auto day_after = today + 24h * 2;
-//  std::cout << "The day after that is " << day_after << "\n";
 
-    
-    
-//    "\033[31m"   rot
-//    "\033[32m"  green
-//    "\033[33m" light green
-//    "\033[34m"  pourpur
-//    "\033[35m"  lila
-//    "\033[36m"
-//    const std: string reset {"\033[0m"};
-    
-    
-   
-    
     try {
             const std::filesystem::path dir{ Plan_file };
             if (!exists(dir)) {
@@ -122,25 +76,73 @@ int main(int argc, const char * argv[]) {
                 std::printf("Can'n open the %s file.\n\n", Plan_file );
                 return 1;
             }
-        
-        
-        struct stat fileInfo;
-        stat( Plan_file , &fileInfo);
-        unsigned long fileSize =  fileInfo.st_size;
-        string file_Info_string{to_string (fileSize)};
-       
-        fileSize = fileInfo.st_ino;
-        file_Info_string.append(to_string (fileSize));
-        
-        fileSize = fileInfo.st_mtimespec.tv_nsec;
-        file_Info_string.append(to_string (fileSize));
-        
-        std::printf("\nSize of a last modefied %s", file_Info_string.c_str() )   ;
-        std::cout<<endl;
-           
+
         } catch (std::exception ex){
             std::printf(" an error.\n\n");
         }
+    
+    multimap_data* data;
+    
+    char* HASH_Data_txt = new char ;
+    HASH_Data_txt = getFileHASH(Data_txt_file);
+    //std::printf("HASH_Data_txt is \" %s \"\n", HASH_Data_txt  );
+    //std::printf("HASH value of Data.txt file is %s\n", HASH_Data_txt );
+    Serializer * const serializer{Serializer::getInstance(Data_dat_file)};
+    
+    if (std::strcmp(HASH_of_Settings_json, HASH_Data_txt)==0) { // read DATA of Data.dat
+        //std::printf("HASH value of Data.txt file is %s\n", HASH_Data_txt );
+        std::printf("HASH value is equal and it is \"%s\"\n", HASH_of_Settings_json );
+        try {
+            //serializer.writeDataFile(data);
+            //auto thread_serializer = std::thread  (std::mem_fn(&Serializer::readDataFile),  &serializer     );
+            std::printf("DATA of \"%s\" \n", Data_dat_file);
+            data= serializer->readDataFile();
+            //thread_serializer.join();
+            if (data->empty()) {
+
+                system(" osascript -e \'display dialog \" \tAn error:\r\n\tData.dat file is empty\" \' ");
+                throw exception();
+            }
+
+        } catch (exception ex) {std::printf("\n Data.dat file read ERROR !\n") ; }
+    }
+    else{
+        try {
+            std::printf("DATA of \"%s\"\n", Data_txt_file );
+            std::printf("HASH_Data_txt is --1\"%s\"\n", HASH_Data_txt  );
+            data=read_data_txt( Data_txt_file,  read_data_txt_reg_expr_1,  read_data_txt_reg_expr_2,   read_data_txt_reg_expr_3);
+            std::printf("HASH_ is \n" );
+            std::printf("HASH_Data_txt is --2\"%s\"\n", HASH_Data_txt  );
+            
+            //Serializer * const serializer{Serializer::getInstance(Data_dat_file)};
+            serializer->writeDataFile(*data);
+            
+            //std::printf("HASH_Data_txt is --3\"%s\"\n", HASH_Data_txt  );
+            Settings* const settings = Settings::getInstance();
+            //std::printf("HASH_Data_txt is --4\"%s\"\n", HASH_Data_txt  );
+            settings->setParameter("hash_value", HASH_Data_txt );
+            
+            
+        } catch (exception ex) { std::printf("\n Data.txt file read ERROR !\n") ;   }
+    }
+    
+//    { /// Get HASH of Data.txt
+//        struct stat fileInfo;
+//        stat( Data_file , &fileInfo);
+//        unsigned long fileSize =  fileInfo.st_size;
+//        string file_Info_string{to_string (fileSize)};
+//        
+//        fileSize = fileInfo.st_ino;
+//        file_Info_string.append(to_string (fileSize));
+//        fileSize = fileInfo.st_mtimespec.tv_nsec;
+//        file_Info_string.append(to_string (fileSize));
+//
+//        std::printf("\nHASH value Data.txt file\t%s\nHASH value of Settings.json     %s\n", file_Info_string.c_str(), hash_value  )   ;
+//
+//        if (std::strcmp(hash_value, file_Info_string.c_str())==0) {
+//           std::printf("HASH value is equal %s\n", hash_value )  ;
+//        }
+//    }
     
     try {
         vector_of_pair_size_t verpak{
@@ -149,31 +151,22 @@ int main(int argc, const char * argv[]) {
                              read_verpack_txt_reg_expr_2,
                              read_verpack_txt_reg_expr_3)};
         
-        multimap_data data{
-            read_data_txt( Data_file,
-                          read_data_txt_reg_expr_1,
-                          read_data_txt_reg_expr_2,
-                          read_data_txt_reg_expr_3)
-        };
+//        multimap_data data{
+//            read_data_txt( Data_file,
+//                          read_data_txt_reg_expr_1,
+//                          read_data_txt_reg_expr_2,
+//                          read_data_txt_reg_expr_3)
+//        };
         
  // out to a file
         if (verpak.empty()) {
-            
-            
+
             system(" osascript -e \'display dialog \" Nothing was copied to the clipboard \" \' ");
             throw exception();
         }
         
-        try {
-            Serializer serializer {read_data_dat};
-            //serializer.writeDataFile(data);
-            auto thread_serializer = std::thread  (std::mem_fn(&Serializer::readDataFile),  &serializer 	);
-            //serializer.readDataFile();
-            thread_serializer.join();
-
-        } catch (exception ex) {
-            std::printf("\n data.dat file write !\n") ;
-        }
+        
+        
         
         
         elements_selection dumpf{verpak, data};
@@ -191,31 +184,17 @@ int main(int argc, const char * argv[]) {
 
     //std::this_thread::sleep_for(std::chrono::milliseconds(10));
     //std::this_thread::sleep_for(std::chrono::seconds(10));
-    cout<<"\033[34m"<<endl;
+    //std::cout<<"\033[32m"<<endl;
+    
+    
+    std::cout<<"\033[32m"<<endl;
     //std::this_thread::sleep_for(std::chrono::seconds(1));
+    printTIME();
     
-    //std::printf("\n OK!\n") ;
-    for (auto &item : buffer) {
-        item=' ';
-    }
-      
-    std::time(&rawtime);
-    timeinfo = std::localtime(&rawtime);
-    std::strftime(buffer, 80,"%H:%M:%S",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
-    std::printf("%s",buffer);
-    
-    
-    
-    cout<<"\033[35m"<<endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
     
-    for (auto &item : buffer) {
-        item=' ';
-    }
-    std::time(&rawtime);
-    timeinfo = std::localtime(&rawtime);
-    std::strftime(buffer, 80,"%H:%M:%S",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
-    std::printf("%s",buffer);
+    std::cout<<"\033[32m"<<endl;
+    printTIME();
     
     //system( "rm  ./Plan.txt");
     
@@ -248,8 +227,8 @@ int main(int argc, const char * argv[]) {
     
     
     Statistics* Stat = Statistics::getInstance();
-    cout<<"\033[35m"<<endl;
-    std::printf("\n amount of allocated memory %u  \n",  (uint)Stat->getStatistics()  );
+    cout<<"\033[31m"<<endl;
+    std::printf("Amount of allocated memory %u  \n",  (uint)Stat->getStatistics()  );
     cout<<endl;
     //------------------------------------------------------------
     

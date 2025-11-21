@@ -7,10 +7,11 @@
 #include "settings.h"
 
 
-Settings::Settings(){
+Settings::Settings() : current_path  { fs::current_path().string()}{
   
+    //current_path  = { fs::current_path().string()};
     
-    string current_path  { fs::current_path().string()};
+    //string current_path  { fs::current_path().string()};
 //
 //    
 //    string  Verpackungs_Plan_file{current_path.data()};
@@ -69,11 +70,11 @@ Settings::Settings(){
     current_path.append("/Database/Settings.json");
     std::ifstream in_stream(current_path.c_str());
     cereal::JSONInputArchive JSON_in (in_stream);
-    JSON_in(settings);
+    JSON_in(settings); //read JSON to map
 //    for (auto & it : settings) {
 //        std::printf("   %s  ->  %s \n\n", it.first.c_str(), it.second.c_str());
 //    }
-    
+    in_stream.close();
 }
 
 Settings::~Settings(){};
@@ -87,4 +88,20 @@ std::string Settings::getParameter(std::string the_desired_element){
     std::map<string, string>::iterator it{settings.find(the_desired_element)};
     //it = settings.find(search);
     return it->second;
+}
+
+void Settings::setParameter(const char* key, const char* value){
+    settings.insert_or_assign(key, value);
+    
+    current_path  = { fs::current_path().string()};
+    current_path.append("/Database/Settings.json");
+    
+    std::ofstream out_stream(current_path.c_str());
+    cereal::JSONOutputArchive JSON_out (out_stream);
+    // jarchive(CEREAL_RAPIDJSON_NOTHING(vec), CEREAL_RAPIDJSON_NOTHING(settings), arr );
+    JSON_out(CEREAL_RAPIDJSON_NOTHING(settings) );
+    
+    std::printf("KEY: \"%s\" was set to VALUE: \"%s\" to Settings.json\n", key, value) ;
+    //std::printf("multimap data of Data.dat \n" );
+    //return void;
 }

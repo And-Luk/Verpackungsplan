@@ -6,9 +6,9 @@
 //
 #include "elements_selection.h"
 
-elements_selection::elements_selection(vector_of_pair_size_t verpak, multimap_data data){
+elements_selection::elements_selection(vector_of_pair_size_t verpak, multimap_data* data){
     for (auto & ID_OP : verpak) {
-        if (data.count(ID_OP.first)==0) {
+        if (data->count(ID_OP.first)==0) {
             temp_element = make_tuple(size_t{0}, float{0.0}, string{"   ------- ? ? ? -------  "});
             //In der data.txt ist kein solches Element vorhanden.
             //internal_data.insert(internal_data.end(), { ID_OP.first , temp_element  } );
@@ -16,7 +16,7 @@ elements_selection::elements_selection(vector_of_pair_size_t verpak, multimap_da
             continue;
         }
         
-        for (auto it =  data.lower_bound(ID_OP.first) ; it != data.upper_bound(ID_OP.first); ++it) {
+        for (auto it =  data->lower_bound(ID_OP.first) ; it != data->upper_bound(ID_OP.first); ++it) {
             temp_element = it->second;
             
             get<1>(temp_element) = get<1>(it->second) * ID_OP.second; // temp_amount;

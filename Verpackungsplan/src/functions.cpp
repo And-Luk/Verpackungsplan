@@ -104,12 +104,12 @@ auto substring_verpack_txt(const string & source, const char* reg_expr= "")-> de
     return data;
 }
 
-auto read_data_txt(const path & path_to, const char* reg_expr_1 = "", const char* reg_expr_2 = "" , const char* reg_expr_3 = "")-> multimap_data{
+auto read_data_txt(const path & path_to, const char* reg_expr_1 = "", const char* reg_expr_2 = "" , const char* reg_expr_3 = "")-> multimap_data*{
     ifstream ifstrm{path_to.c_str()};
     string str_all,str_temp, str_old;
     smatch result;
     tup_element tuple_temp;
-    multimap_data data;
+    multimap_data* data =new multimap_data;
     
     for (;getline(ifstrm, str_all);) {
         regex reg{reg_expr_1, std::regex_constants::ECMAScript | std::regex_constants::icase};
@@ -121,18 +121,19 @@ auto read_data_txt(const path & path_to, const char* reg_expr_1 = "", const char
             if (str_temp[0]=='9' ) {
                 str_old = str_temp;
                 tuple_temp = substring(result.suffix(), reg_expr_2 , reg_expr_3);
-                data.insert( {(size_t)stoi(str_old), tuple_temp} );
+                data->insert( {(size_t)stoi(str_old), tuple_temp} );
                 continue;
             }
             
             if (str_temp[0]=='5' ) {
                 tuple_temp = substring(str_all, reg_expr_2 , reg_expr_3);
                 get<0>(tuple_temp)= stoi(str_temp);
-                data.insert({(size_t)stoi(str_old), tuple_temp});
+                data->insert({(size_t)stoi(str_old), tuple_temp});
             }
         }
     }
-    return data;
+    //return std::move (data);
+    return std::move(data);
 }
 
 auto substring (const string & source, const char* reg_expr_1 = "" , const char* reg_expr_2 = "")-> tup_element{
@@ -198,4 +199,57 @@ void umlauts (vector<pair<size_t, std::tuple<size_t, int, string >>> & internal_
         get<2>(element.second)=strout.str();
         strout.str("");
     }
+}
+
+char* getFileHASH(const path & path_to_file){
+    struct stat fileInfo;
+    stat( path_to_file.c_str() , &fileInfo);
+    unsigned long fileSize =  fileInfo.st_size;
+    
+    char* HASH = new char;
+    std::strcat(HASH, to_string( fileSize).c_str());
+       
+    fileSize = fileInfo.st_ino;
+    std::strcat(HASH, to_string( fileSize).c_str());
+
+    fileSize = fileInfo.st_mtimespec.tv_nsec;
+    std::strcat(HASH, to_string( fileSize).c_str());
+    
+    return std::move ( HASH );
+}
+
+char* printTIME(){
+    
+    std::time_t rawtime;
+    std::tm* timeinfo;
+    char buffer [80];
+
+    std::time(&rawtime);
+    timeinfo = std::localtime(&rawtime);
+    std::strftime(buffer,80,"%d-%m-%Y    %H:%M:%S",timeinfo);   //%Y-%m-%d-%H-%M-%S    %d-%m-%Y    %H:%M:%S
+    std::printf("TIME is : %s\n", buffer );
+    //std::puts(buffer);
+
+
+    ////  auto tomorrow = today + 24h;
+    ////  std::cout << "Tomorrow is " << tomorrow << "\n";
+    ////
+    ////  auto day_after = today + 24h * 2;
+    ////  std::cout << "The day after that is " << day_after << "\n";
+
+    ////    "\033[30m"   black
+    ////    "\033[31m"   rot
+    ////    "\033[32m"  green
+    ////    "\033[33m"  light green
+    ////    "\033[34m"  pourpur
+    ////    "\033[35m"  lila
+    ////    "\033[36m"
+    ////    const std: string reset {"\033[0m"};
+    
+    
+    
+    char* time = new char[80];
+    std::strcpy(time, buffer);
+    
+    return std::move( time );
 }

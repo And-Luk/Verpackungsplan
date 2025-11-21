@@ -30,7 +30,7 @@ class elements_selection {
     
 public:
     elements_selection();
-    elements_selection(vector_of_pair_size_t verpak_txt, multimap_data data_txt);
+    elements_selection(vector_of_pair_size_t verpak_txt, multimap_data* data_txt);
     
     ~elements_selection();
     
