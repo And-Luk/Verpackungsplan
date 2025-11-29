@@ -106,7 +106,6 @@ void Settings::setParameter(const char* key, const char* value){
     // jarchive(CEREAL_RAPIDJSON_NOTHING(vec), CEREAL_RAPIDJSON_NOTHING(settings), arr );
     JSON_out(CEREAL_RAPIDJSON_NOTHING(settings) );
     
-    std::printf("KEY: \"%s\" was set to VALUE: \"%s\" to Settings.json\n", key, value) ;
-    //std::printf("multimap data of Data.dat \n" );
+    std::printf("KEY: \"%s\" was set to VALUE: \"\033[31m%s\033[0m\" into \"\033[31m%s\033[0m\"\n", key, value, current_path.c_str()) ;
     //return void;
 }

@@ -14,10 +14,9 @@
 
 #include <thread>
 
-
 int main(int argc, const char * argv[]) {
 
-    std::printf("Date and Time: \033[31m%s\033[0m\n", printTIME() );
+    std::printf("Date and Time: \033[32m%s\033[0m\n", printTIME() );
     //system("pbpaste > Plan.txt");
     Settings* const settings = Settings::getInstance();
 
@@ -42,14 +41,14 @@ int main(int argc, const char * argv[]) {
  
     const char* const HASH_of_Settings_json {settings->getParameter("hash_value") };
 
-    char* HASH_Data_txt = new char[100] ;
-    HASH_Data_txt = getFileHASH(Data_New_txt_file);
+    char* FILE_HASH = new char[100] ;
+    FILE_HASH = getFileHASH(Data_New_txt_file);
     
     
     try {
             const std::filesystem::path dir{ Plan_file };
             if (!exists(dir)) {
-                std::cout<<std::endl<<" getParameter(\"Plan_file\")  "<<Plan_file<<std::endl<<std::endl;
+                std::cout<<std::endl<<" getParameter(\"Plan_file\")  "<<Plan_file<<std::endl;
                 std::printf("Can'n open the %s file.\n\n", Plan_file );
                 return 1;
             }
@@ -63,13 +62,13 @@ int main(int argc, const char * argv[]) {
     //Serializer * const serializer{Serializer::getInstance(Data_dat_file)};
     Serializer * const serializer{Serializer::getInstance(Data_dat_file)};
     
-    if (std::strcmp(HASH_of_Settings_json, HASH_Data_txt)==0) { // read DATA of Data.dat   >>>HASH_of_Settings_json, HASH_Data_txt
+    if (std::strcmp(HASH_of_Settings_json, FILE_HASH)==0) { // read DATA of Data.dat   >>>HASH_of_Settings_json, HASH_Data_txt
 
-        std::printf("HASH value is equal and it is \033[31m\"%s\" \033[0m\n", HASH_of_Settings_json );
+        std::printf("HASH value is equal and it is \"\033[31m%s\033[0m\" \n", HASH_of_Settings_json );
         try {
             //serializer.writeDataFile(data);
             //auto thread_serializer = std::thread  (std::mem_fn(&Serializer::readDataFile),  &serializer     );
-            std::printf("DATA of \"%s\" \n", Data_dat_file);
+            std::printf("DATA from \"\033[31m%s\033[0m\" \n", Data_dat_file);
             data= serializer->readDataFile();
             //thread_serializer.join();
             if (data->empty()) {
@@ -87,11 +86,12 @@ int main(int argc, const char * argv[]) {
             data = read_data_New_txt(Data_New_txt_file,read_data_txt_reg_expr_1,read_data_txt_reg_expr_2,"NOT USED", "NOT USED");
             //std::printf("\t data SIZE = \"\033[31m%lu\033[0m\" \n", data->size()) ;
             
+            std::printf("\nwrite DATA to \"\033[31m%s\033[0m\"\n", Data_dat_file ) ;
             serializer->writeDataFile(*data);
             Settings* const settings = Settings::getInstance();
-            settings->setParameter("hash_value", HASH_Data_txt );
-            //std::printf("DATA of \"%s\" \n", Data_txt_file);
-            std::printf("DATA of \"%s\" \n", Data_New_txt_file);
+            settings->setParameter("hash_value", FILE_HASH );
+
+            std::printf("DATA from \"\033[31m%s\033[0m\"\n", Data_New_txt_file);
             
         } catch (exception ex) { std::printf("\n Data_New.txt file read ERROR !\n") ;   }
     }
@@ -108,11 +108,13 @@ int main(int argc, const char * argv[]) {
             system(" osascript -e \'display dialog \" Nothing was copied to the clipboard \" \' ");
             throw exception();
         }
+        
+        std::printf("DATA SIZE = \"\033[31m%lu\033[0m\" \n", data->size()) ;
 
         elements_selection dumpf{verpak, data};
-        dumpf.read_write_RTF( RTF_template_file,
-                                                RTF_OUT_file,
-                                                RTF_END_file);
+//        dumpf.read_write_RTF( RTF_template_file,
+//                                                RTF_OUT_file,
+//                                                RTF_END_file);
     } catch (exception ex) {
         std::printf("\t something didn't go as planned!\n") ;
         //system( "rm  ./Plan.txt");

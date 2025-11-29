@@ -25,7 +25,7 @@ Serializer* Serializer::getInstance(const path & path_to_file ){
 int Serializer::writeDataFile(const multimap_data& multi){
     data_entry entry;
     fileData.open(pathToFile,  ios::out | std::ios::binary ); //os::trunc |
-    std::printf("\nwrite DATA to \"%s\"\n", pathToFile ) ;
+    //std::printf("\nwrite DATA to \"%s\"\n", pathToFile ) ;
     for (const auto& item : multi) {
         entry.operation = item.first;
         entry.article = get<0>(item.second);
@@ -55,7 +55,7 @@ auto Serializer::readDataFile()-> multimap_data*{
         
         if(!fileData) { // ошибка чтения типа
             std::cout << "Unable to read type of Data.txt file\n";
-            return std::move(data); //??
+            return std::move(data); // ??
         }
         //std::printf(" %lu     %lu    %-60s%10f \n", entry.operation, entry.article, entry.title, entry.amount) ;
         get<0>(multimap_data_value) = entry.article;
