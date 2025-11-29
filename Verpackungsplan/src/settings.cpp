@@ -84,10 +84,15 @@ Settings* Settings::getInstance(){
     return &instance;
 }
 
-std::string Settings::getParameter(std::string the_desired_element){
+const char* Settings::getParameter(std::string the_desired_element){
     std::map<string, string>::iterator it{settings.find(the_desired_element)};
     //it = settings.find(search);
-    return it->second;
+    
+    char* value = new char[200];
+    std::strcpy(value, it->second.c_str());
+    
+    return std::move (value);
+    //return it->second;
 }
 
 void Settings::setParameter(const char* key, const char* value){

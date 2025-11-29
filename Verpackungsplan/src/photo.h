@@ -15,5 +15,7 @@
 #include <opencv2/imgproc.hpp>
 
 
+#include <thread>
+
 
 int take_a_photo();

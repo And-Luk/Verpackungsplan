@@ -46,7 +46,7 @@ private:
 
 public:
     static Settings* getInstance();
-    std::string getParameter(std::string search);
+    const char* getParameter(std::string search);
     void setParameter(const char* key, const char* value);
     Settings(const Settings&) = delete;
     Settings& operator=(const Settings&) = delete;

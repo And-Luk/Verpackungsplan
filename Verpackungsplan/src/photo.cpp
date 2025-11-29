@@ -6,6 +6,7 @@
 //
 #include "photo.h"
 
+
 using namespace cv;
 
 
@@ -31,8 +32,8 @@ int take_a_photo(){
            return 1;
        }
     
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     
-
        // create a window to display the images from the webcam
       // cv::namedWindow("Webcam", cv::WINDOW_AUTOSIZE);
     

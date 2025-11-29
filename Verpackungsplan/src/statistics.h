@@ -21,8 +21,9 @@ public:
     static Statistics* getInstance();
     size_t getStatistics();
     void setStatistics(size_t value);
-    void cutStatistics();
+    void cutStatistics(size_t value);
     Statistics(const Statistics&) = delete;
     Statistics& operator=(const Statistics&) = delete;
 };
-//size_t Statistics::memory {0};
+//Statistics::memory ={0};
+

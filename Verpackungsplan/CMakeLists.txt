@@ -27,4 +27,5 @@ set(SOURCE_FILES
 add_executable(main ${SOURCE_FILES})
 
 # Link libraries  "OpenCV"  & others
-target_link_libraries(main ${OpenCV_LIBS} "/Users/and/Downloads/DELETE/libxl-mac-4.6.0/lib/libxl.dylib" )
+target_link_libraries(main ${OpenCV_LIBS} "/Users/and/workspace/Verpackungsplan/Verpackungsplan/libxl/lib/libxl.dylib"  )
+#target_link_libraries(main ${OpenCV_LIBS} "/Users/and/Downloads/Docs/libxl-mac-4.6.0/lib/libxl.dylib" )

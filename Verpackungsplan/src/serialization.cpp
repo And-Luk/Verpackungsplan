@@ -55,15 +55,13 @@ auto Serializer::readDataFile()-> multimap_data*{
         
         if(!fileData) { // ошибка чтения типа
             std::cout << "Unable to read type of Data.txt file\n";
-            return nullptr;
+            return std::move(data); //??
         }
-        std::printf(" %lu     %lu    %-60s%-10f \n", entry.operation, entry.article, entry.title, entry.amount) ;
+        //std::printf(" %lu     %lu    %-60s%10f \n", entry.operation, entry.article, entry.title, entry.amount) ;
         get<0>(multimap_data_value) = entry.article;
         get<1>(multimap_data_value) = entry.amount;
         get<2>(multimap_data_value) = entry.title;
         data->insert( {entry.operation, multimap_data_value} );
     }
-    
-    
    return std::move(data);
 }
