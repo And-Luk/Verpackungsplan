@@ -21,7 +21,7 @@ typedef struct {
 
 
 class Serializer {
-    std::fstream  fileData{nullptr};
+    std::fstream  fileData;
     char pathToFile[200];
     Serializer(const path & path_to_file = "./");
     Serializer()= delete;

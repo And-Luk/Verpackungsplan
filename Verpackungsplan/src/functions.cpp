@@ -109,38 +109,38 @@ auto substring_verpack_txt(const string & source, const char* reg_expr= "")-> de
     return data;
 }
 
-auto read_data_txt(const path & path_to_file, const char* reg_expr_1 = "", const char* reg_expr_2 = "" , const char* reg_expr_3 = "")-> multimap_data*{
-    ifstream ifstrm{path_to_file.c_str()};
-    string str_all,str_temp, str_old;
-    smatch result;
-    tup_element tuple_temp;
-    multimap_data* data =new multimap_data;
-    
-    for (;getline(ifstrm, str_all);) {
-        regex reg{reg_expr_1, std::regex_constants::ECMAScript | std::regex_constants::icase};
-        if (regex_search(str_all,result,reg)) {
-            str_temp = result.str();
-            str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-            get<1>(tuple_temp)= 0;  // ???
-            
-            if (str_temp[0]=='9' ) {
-                str_old = str_temp;
-                tuple_temp = substring(result.suffix(), reg_expr_2 , reg_expr_3);
-                data->insert( {(size_t)stoi(str_old), tuple_temp} );
-                continue;
-            }
-            
-            if (str_temp[0]=='5' ) {
-                tuple_temp = substring(str_all, reg_expr_2 , reg_expr_3);
-                get<0>(tuple_temp)= stoi(str_temp);
-                data->insert({(size_t)stoi(str_old), tuple_temp});
-            }
-        }
-    }
-    return std::move(data);
-}
+//auto read_Data_txt(const path & path_to_file, const char* reg_expr_1 = "", const char* reg_expr_2 = "" , const char* reg_expr_3 = "")-> multimap_data*{
+//    ifstream ifstrm{path_to_file.c_str()};
+//    string str_all,str_temp, str_old;
+//    smatch result;
+//    tup_element tuple_temp;
+//    multimap_data* data =new multimap_data;
+//    
+//    for (;getline(ifstrm, str_all);) {
+//        regex reg{reg_expr_1, std::regex_constants::ECMAScript | std::regex_constants::icase};
+//        if (regex_search(str_all,result,reg)) {
+//            str_temp = result.str();
+//            str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
+//            get<1>(tuple_temp)= 0;  // ???
+//            
+//            if (str_temp[0]=='9' ) {
+//                str_old = str_temp;
+//                tuple_temp = substring(result.suffix(), reg_expr_2 , reg_expr_3);
+//                data->insert( {(size_t)stoi(str_old), tuple_temp} );
+//                continue;
+//            }
+//            
+//            if (str_temp[0]=='5' ) {
+//                tuple_temp = substring(str_all, reg_expr_2 , reg_expr_3);
+//                get<0>(tuple_temp)= stoi(str_temp);
+//                data->insert({(size_t)stoi(str_old), tuple_temp});
+//            }
+//        }
+//    }
+//    return std::move(data);
+//}
 
-auto read_data_New_txt(const path & path_to_file, const char* reg_expr_1 , const char* reg_expr_2, const char* reg_expr_3, const char* reg_expr_4)-> multimap_data*{
+auto read_Data_txt(const path & path_to_file, const char* reg_expr_1 , const char* reg_expr_2, const char* reg_expr_3, const char* reg_expr_4)-> multimap_data*{
     ifstream ifstrm{path_to_file.c_str()};
     string str_all, str_temp, result_str;
     size_t article_temp{0} , position{0};
@@ -150,24 +150,22 @@ auto read_data_New_txt(const path & path_to_file, const char* reg_expr_1 , const
     multimap_data* data =new multimap_data;
     
     for (;getline(ifstrm, str_all);) {
-       
+        // Defining a regular expressions.
         regex reg_1{reg_expr_1,std::regex_constants::ECMAScript | std::regex_constants::icase};
         regex reg_2{reg_expr_2,std::regex_constants::ECMAScript | std::regex_constants::icase};
-        regex reg_3{reg_expr_3,std::regex_constants::ECMAScript | std::regex_constants::icase}; // "[[:digit:]]+"
-        regex reg_4{reg_expr_4,std::regex_constants::ECMAScript | std::regex_constants::icase}; // "[[:digit:]]+"
+        regex reg_3{reg_expr_3,std::regex_constants::ECMAScript | std::regex_constants::icase}; //"^\\s+|\\s+$"
+        regex reg_4{reg_expr_4,std::regex_constants::ECMAScript | std::regex_constants::icase}; // "[[:digit:]]+"                   "NOT USED"
         
         if (str_all.empty()) {
             continue;
         }
         
         try {
-            
             if (regex_search(str_all,result,reg_1)) {
                 str_temp = result.str();
                 str_all = str_all.erase(0, str_temp.length());
                 str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
                 article_temp= stoi(str_temp);
-                //std::printf("\t iregex_search_1 =  %s \n", str_temp.c_str()) ;
             }
             
             if (regex_search(str_all,result,reg_2)) {
@@ -175,7 +173,6 @@ auto read_data_New_txt(const path & path_to_file, const char* reg_expr_1 , const
                 str_all = str_all.erase(0, str_temp.length());
                 str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
                 get<0>(tuple_temp)= (size_t)stoi(str_temp);
-                //std::printf("\t iregex_search _2 = %s \n", str_temp.c_str()) ;
             }
             
             position = str_all.find("=");
@@ -183,82 +180,19 @@ auto read_data_New_txt(const path & path_to_file, const char* reg_expr_1 , const
             std::replace(str_temp.begin(), str_temp.end(), ',', '.');
             float_temp = (float)std::stof( str_temp);
             
-            
-            
             float_temp =(float)stof(str_temp);
             get<1>(tuple_temp)= float_temp;
             
-            //std::string::size_type str_last_pos{std::string::npos};
-            //std::string whitespaces (" \t\f\v\n\r");
-            str_all.erase(position, str_all.size());
-
-            //std::printf("\t    all_string = \"\033[31m%s\033[0m\"\n", str_all.c_str()) ;
+            str_all.erase(position, str_all.size()); // shrink_to
             
-            // Defining a regular expression.
-            std::regex r("^\\s+|\\s+$");
             // Using the regular expression to remove whitespaces.
-            str_all = std::regex_replace(str_all, r, "");
-            
-            //std::printf("\t TO TUPLE_TEMP = \"\033[31m%s\033[0m\" \n", str_all.c_str()) ;
+            str_all = std::regex_replace(str_all, reg_3, "");
+            //std::printf("\t    all_string to data file = \"\033[31m%s\033[0m\"\n", str_all.c_str()) ;
             get<2>(tuple_temp)= str_all;
-            
-            
             data->insert({article_temp, tuple_temp});
-            
-            
-            
-            //throw exception();
-        } catch (exception &ex) {
-            
-            continue;
-        }
+        } catch (exception &ex)  { continue; }
         
-//        if (regex_search(str_all,result,reg_1)) {
-//            str_temp = result.str();
-//            str_all = str_all.erase(0, str_temp.length());
-//            str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-//            article_temp= stoi(str_temp);
-//            //std::printf("\t iregex_search_1 =  %s \n", str_temp.c_str()) ;
-//        }else{continue;}
-//        
-//        if (regex_search(str_all,result,reg_2)) {
-//            str_temp = result.str();
-//            str_all = str_all.erase(0, str_temp.length());
-//            str_temp = str_temp.erase(6, str_temp.length());  // shrink to 6 digits
-//            get<0>(tuple_temp)= (size_t)stoi(str_temp);
-//            //std::printf("\t iregex_search _2 = %s \n", str_temp.c_str()) ;
-//        }
-//        
-//        position = str_all.find("=");
-//        str_temp =str_all.substr(position+1, str_all.size()); 
-//        std::replace(str_temp.begin(), str_temp.end(), ',', '.');
-//        float_temp = (float)std::stof( str_temp);
-//        
-//        
-//        
-//        float_temp =(float)stof(str_temp);
-//        get<1>(tuple_temp)= float_temp;
-//        
-//        //std::string::size_type str_last_pos{std::string::npos};
-//        //std::string whitespaces (" \t\f\v\n\r");
-//        str_all.erase(position, str_all.size());
-//
-//        //std::printf("\t    all_string = \"\033[31m%s\033[0m\"\n", str_all.c_str()) ;
-//        
-//        // Defining a regular expression.
-//        std::regex r("^\\s+|\\s+$");
-//        // Using the regular expression to remove whitespaces.
-//        str_all = std::regex_replace(str_all, r, "");
-//        
-//        //std::printf("\t TO TUPLE_TEMP = \"\033[31m%s\033[0m\" \n", str_all.c_str()) ;
-//        get<2>(tuple_temp)= str_all;
-//        
-//        
-//        data->insert({article_temp, tuple_temp});
     }
-    
-    //std::printf("\t data SIZE = \"\033[31m%lu\033[0m\" \n", data->size()) ;
-    //std::printf("\t data from Data_New.txt \n") ;
     return std::move(data);
 }
 

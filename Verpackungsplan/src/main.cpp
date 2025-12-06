@@ -17,7 +17,8 @@
 int main(int argc, const char * argv[]) {
 
     std::printf("Date and Time: \033[32m%s\033[0m\n", printTIME() );
-    //system("pbpaste > Plan.txt");
+    system("cat ./Plan.txt | pbcopy"); //system("pbpaste > Plan.txt");  cat ./Plan.txt | pbcopy
+    
     Settings* const settings = Settings::getInstance();
 
     const char* const Plan_file {settings->getParameter("Plan_file") };
@@ -46,21 +47,27 @@ int main(int argc, const char * argv[]) {
     
     
     try {
-            const std::filesystem::path dir{ Plan_file };
-            if (!exists(dir)) {
-                std::cout<<std::endl<<" getParameter(\"Plan_file\")  "<<Plan_file<<std::endl;
-                std::printf("Can'n open the %s file.\n\n", Plan_file );
-                return 1;
-            }
+        const std::filesystem::path dir_Plan_file{ Plan_file };
+        const std::filesystem::path dir_Data_dat_file{ Data_dat_file };
+        if (!exists(dir_Plan_file)) {
+            std::printf("Can'n open the \"\033[31m%s\033[0m\" file.\n\n", Plan_file );
+            return 1;
+        }
+        if (!exists(dir_Data_dat_file)) {
+            std::printf("Can'n open the \"\033[31m%s\033[0m\" file.\n\n", Data_dat_file );
+            return 1;
+        }
 
         } catch (std::exception ex){
-            std::printf("Exception Can'n open the %s file.\n\n", Plan_file );
+            std::printf("Exception Can'n open the \"\033[31m%s\033[0m\"  file.\n\n", Plan_file );
         }
     
     multimap_data* data{nullptr};
 
-    //Serializer * const serializer{Serializer::getInstance(Data_dat_file)};
+    
+
     Serializer * const serializer{Serializer::getInstance(Data_dat_file)};
+    
     
     if (std::strcmp(HASH_of_Settings_json, FILE_HASH)==0) { // read DATA of Data.dat   >>>HASH_of_Settings_json, HASH_Data_txt
 
@@ -82,11 +89,12 @@ int main(int argc, const char * argv[]) {
     else{
         // read DATA of Data.txt
         try {
-            // data=read_data_txt( Data_txt_file,  read_data_txt_reg_expr_1,  read_data_txt_reg_expr_2,   read_data_txt_reg_expr_3);
-            data = read_data_New_txt(Data_New_txt_file,read_data_txt_reg_expr_1,read_data_txt_reg_expr_2,"NOT USED", "NOT USED");
+            // data=read_Data_txt( Data_txt_file,  read_data_txt_reg_expr_1,  read_data_txt_reg_expr_2,   read_data_txt_reg_expr_3);
+            //data = read_Data_New_txt(Data_New_txt_file,read_data_txt_reg_expr_1,read_data_txt_reg_expr_2,"NOT USED", "NOT USED");
+            data = read_Data_txt(Data_New_txt_file,read_data_txt_reg_expr_1,read_data_txt_reg_expr_2);
             //std::printf("\t data SIZE = \"\033[31m%lu\033[0m\" \n", data->size()) ;
             
-            std::printf("\nwrite DATA to \"\033[31m%s\033[0m\"\n", Data_dat_file ) ;
+            std::printf("\nDATA was written to \"\033[31m%s\033[0m\" file\n", Data_dat_file ) ;
             serializer->writeDataFile(*data);
             Settings* const settings = Settings::getInstance();
             settings->setParameter("hash_value", FILE_HASH );
