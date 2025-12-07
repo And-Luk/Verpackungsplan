@@ -278,7 +278,7 @@ char* getFileHASH(const path & path_to_file){
     return std::move ( HASH );
 }
 
-char* printTIME(){
+char* get_DATE_TIME(){
     
     std::time_t rawtime;
     std::tm* timeinfo;

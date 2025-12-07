@@ -16,14 +16,14 @@
 
 int main(int argc, const char * argv[]) {
 
-    std::printf("Date and Time: \033[32m%s\033[0m\n", printTIME() );
+    std::printf("Date & Time: \033[32m%s\033[0m\n", get_DATE_TIME() );
     system("cat ./Plan.txt | pbcopy"); //system("pbpaste > Plan.txt");  cat ./Plan.txt | pbcopy
     
-    Settings* const settings = Settings::getInstance();
-
+    const char* const Settings_file {"/Users/and/Downloads/Verpackungsplan/Database/Settings.json"};
+    Settings*  settings = Settings::getInstance(Settings_file);
+    
     const char* const Plan_file {settings->getParameter("Plan_file") };
-    //const char* const Data_txt_file {settings->getParameter("Data_txt_file") };
-    const char* const Data_New_txt_file {settings->getParameter("Data_New_txt_file") };
+    const char* const Data_txt_file {settings->getParameter("Data_txt_file") };
     const char* const Data_dat_file {settings->getParameter("Data_dat_file") };
     
     const char* const RTF_template_file {settings->getParameter("RTF_template_file") };
@@ -40,10 +40,10 @@ int main(int argc, const char * argv[]) {
 
     //const char* const system_call_ch {settings->getParameter("system_call") };
  
-    const char* const HASH_of_Settings_json {settings->getParameter("hash_value") };
+    const char* const HASH_from_Settings_file {settings->getParameter("hash_value") };
 
     char* FILE_HASH = new char[100] ;
-    FILE_HASH = getFileHASH(Data_New_txt_file);
+    FILE_HASH = getFileHASH(Data_txt_file);
     
     
     try {
@@ -69,37 +69,39 @@ int main(int argc, const char * argv[]) {
     Serializer * const serializer{Serializer::getInstance(Data_dat_file)};
     
     
-    if (std::strcmp(HASH_of_Settings_json, FILE_HASH)==0) { // read DATA of Data.dat   >>>HASH_of_Settings_json, HASH_Data_txt
+    if (std::strcmp(HASH_from_Settings_file, FILE_HASH)==0) { // read DATA of Data.dat   >>>HASH_of_Settings_json, HASH_Data_txt
 
-        std::printf("HASH value is equal and it is \"\033[31m%s\033[0m\" \n", HASH_of_Settings_json );
+        std::printf("The HASH value is equal to and has a value of: \"\033[31m%s\033[0m\" \n", HASH_from_Settings_file );
         try {
             //serializer.writeDataFile(data);
             //auto thread_serializer = std::thread  (std::mem_fn(&Serializer::readDataFile),  &serializer     );
-            std::printf("DATA from \"\033[31m%s\033[0m\" \n", Data_dat_file);
+            std::printf("DATA from: \"\033[31m%s\033[0m\" \n", Data_dat_file);
             data= serializer->readDataFile();
             //thread_serializer.join();
             if (data->empty()) {
-
                 system(" osascript -e \'display dialog \" \tAn error:\r\n\tData.dat file is empty\" \' ");
                 throw exception();
             }
-
         } catch (exception ex) {std::printf("\n Data.dat file read ERROR !\n") ; }
     }
-    else{
-        // read DATA of Data.txt
+    else{       // read DATA of Data.txt
         try {
             // data=read_Data_txt( Data_txt_file,  read_data_txt_reg_expr_1,  read_data_txt_reg_expr_2,   read_data_txt_reg_expr_3);
             //data = read_Data_New_txt(Data_New_txt_file,read_data_txt_reg_expr_1,read_data_txt_reg_expr_2,"NOT USED", "NOT USED");
-            data = read_Data_txt(Data_New_txt_file,read_data_txt_reg_expr_1,read_data_txt_reg_expr_2);
-            //std::printf("\t data SIZE = \"\033[31m%lu\033[0m\" \n", data->size()) ;
-            
-            std::printf("\nDATA was written to \"\033[31m%s\033[0m\" file\n", Data_dat_file ) ;
+            data = read_Data_txt(Data_txt_file,read_data_txt_reg_expr_1,read_data_txt_reg_expr_2);
+            std::printf("DATA from: \"\033[31m%s\033[0m\" file\n", Data_txt_file);
+            std::printf("DATA was written to: \"\033[31m%s\033[0m\" file\n", Data_dat_file ) ;
             serializer->writeDataFile(*data);
-            Settings* const settings = Settings::getInstance();
+            //Settings* const settings = settings->getInstance((char*)Settings_file);
+            Settings* settings = Settings::getInstance(Settings_file);
+            
+            std::printf("KEY -> \"\033[31m%s\033[0m\" was set to VALUE -> \"\033[31m%s\033[0m\"\n\tinto: \"\033[31m%s\033[0m\" file\n",
+                        "hash_value",
+                        FILE_HASH,
+                        Settings_file);
             settings->setParameter("hash_value", FILE_HASH );
 
-            std::printf("DATA from \"\033[31m%s\033[0m\"\n", Data_New_txt_file);
+            
             
         } catch (exception ex) { std::printf("\n Data_New.txt file read ERROR !\n") ;   }
     }
@@ -117,7 +119,7 @@ int main(int argc, const char * argv[]) {
             throw exception();
         }
         
-        std::printf("DATA SIZE = \"\033[31m%lu\033[0m\" \n", data->size()) ;
+        //std::printf("Amounts of DATA records: \"\033[31m%lu\033[0m\" \n", data->size()) ;
 
         elements_selection dumpf{verpak, data};
 //        dumpf.read_write_RTF( RTF_template_file,
@@ -130,8 +132,7 @@ int main(int argc, const char * argv[]) {
     }
 
     
-    std::cout<<"\033[32m";
-    printTIME();
+
     
     //system( "rm  ./Plan.txt");
     
@@ -166,35 +167,8 @@ int main(int argc, const char * argv[]) {
     //------------------------------------------------------------
     
     data->clear();
-    delete data;
-        
-//        for (const auto& item : *data) {
-//            first_el = item.first;
-//            second_el = get<0>(item.second);
-//            amount_el = get<1>(item.second);
-//            string_el = get<2>(item.second).c_str();
-//            std::printf("\t %lu  %lu  \"\033[31m%s\033[0m\" \t\t\t%f\n", first_el, second_el, string_el.c_str(), amount_el) ;
-//        }
-        
-        
-  //  }
-
-
-    
-    
-    
-    
-    
-    //------------------------------------------------------------
-
-    
-    
-    cout<<"\033[31m";
-    //std::printf("Amount of allocated memory %u  \n",  (uint)Stat->getStatistics()  );
-    
-    cout<<"\033[32m";
-    std::printf("\n OK!\n") ;
-    cout<<"\033[0m";
+    delete data;   
+    std::printf("\n \033[32mOK!\033[0m\n") ;
     return 0;
 }
 

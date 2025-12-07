@@ -42,4 +42,4 @@ void umlauts (vector<pair<size_t, std::tuple<size_t, int, string >>> & internal_
 
 char* getFileHASH(const path &);
 
-char* printTIME();
+char* get_DATE_TIME();
