@@ -17,7 +17,7 @@
 int main(int argc, const char * argv[]) {
 
     std::printf("Date & Time: \033[32m%s\033[0m\n", get_DATE_TIME() );
-    system("cat ./Plan.txt | pbcopy"); //system("pbpaste > Plan.txt");  cat ./Plan.txt | pbcopy
+    system("cat ./Database/Plan.txt | pbcopy"); //system("pbpaste > Plan.txt");  cat ./Plan.txt | pbcopy
     
     const char* const Settings_file {"/Users/and/Downloads/Verpackungsplan/Database/Settings.json"};
     Settings*  settings = Settings::getInstance(Settings_file);
@@ -38,7 +38,7 @@ int main(int argc, const char * argv[]) {
     const char* const read_data_txt_reg_expr_2 {settings->getParameter("read_data_txt_reg_expr_2") };
     //const char* const read_data_txt_reg_expr_3 {settings->getParameter("read_data_txt_reg_expr_3") };
 
-    //const char* const system_call_ch {settings->getParameter("system_call") };
+    const char* const system_call {settings->getParameter("system_call") };
  
     const char* const HASH_from_Settings_file {settings->getParameter("hash_value") };
 
@@ -75,7 +75,7 @@ int main(int argc, const char * argv[]) {
         try {
             //serializer.writeDataFile(data);
             //auto thread_serializer = std::thread  (std::mem_fn(&Serializer::readDataFile),  &serializer     );
-            std::printf("DATA from: \"\033[31m%s\033[0m\" \n", Data_dat_file);
+            std::printf("DATA from: \"\033[31m%s\033[0m\" file\n", Data_dat_file);
             data= serializer->readDataFile();
             //thread_serializer.join();
             if (data->empty()) {
@@ -114,7 +114,6 @@ int main(int argc, const char * argv[]) {
                              read_verpack_txt_reg_expr_3)};
         
         if (verpak.empty()) {
-
             system(" osascript -e \'display dialog \" Nothing was copied to the clipboard \" \' ");
             throw exception();
         }
@@ -131,13 +130,10 @@ int main(int argc, const char * argv[]) {
         return 1;
     }
 
-    
-
-    
+    //_____________________________________________________________
     //system( "rm  ./Plan.txt");
-    
-    //system(system_call_ch.c_str());
-
+    //system(system_call);
+    //_____________________________________________________________
     
 
     
